@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.tornado.brap</groupId>
+    <artifactId>brap-examples</artifactId>
+    <packaging>bundle</packaging>
+    <version>0.9</version>
+    <name>BRAP Examples</name>
+    <description>Examples for BRAP client and server usage, including BRAP-Spring.</description>
+    <parent>
+        <groupId>no.tornado.brap</groupId>
+        <artifactId>brap</artifactId>
+        <version>0.9</version>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>no.tornado.brap</groupId>
+            <artifactId>brap-common</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>no.tornado.brap</groupId>
+            <artifactId>brap-server</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>no.tornado.brap</groupId>
+            <artifactId>brap-client</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>no.tornado.brap</groupId>
+            <artifactId>brap-spring</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty</artifactId>
+            <version>6.1.17</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.4.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            no.tornado.brap.examples.service, no.tornado.brap.examples.spring 
+                        </Export-Package>
+                        <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <distributionManagement>
+        <repository>
+            <id>brap</id>
+            <name>BRAP Maven Repository</name>
+            <url>scp://brap.tornado.no//home/brap/webapps/maven/repository</url>
+        </repository>
+        <snapshotRepository>
+            <id>brap-snaps</id>
+            <name>BRAP Maven Snapshots Repository</name>
+            <url>scp://brap.tornado.no//home/brap/webapps/maven/snapshots</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+</project>
