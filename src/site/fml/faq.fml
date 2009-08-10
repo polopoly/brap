@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs xmlns="http://maven.apache.org/FML/1.0.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/FML/1.0.1 http://maven.apache.org/xsd/fml-1.0.1.xsd"
+  title="Frequently Asked Questions"
+  toplink="false">
+
+  <part id="general">
+    <title>General</title>
+
+    <faq id="why-brap">
+      <question>
+        Why BRAP?
+      </question>
+      <answer>
+        <p>Spring HttpInvoker is a great way to expose your remote services to clients. However,
+        the client dependencies are quite large in size, and the configuration is non-trivial when
+        you also need authentication, hence needing to add Spring Security to the mix.</p>
+
+        <p>BRAP provides an alternative that has all the benefits of HttpInvoker, is just as fast,
+        comes with good documentation and has a lot smaller footprint on the client (9 kb).</p>
+
+        <p>Being able to authenticate with your existing domain objects is a great plus as well.</p>
+        
+        <p>There is also something to be said for having read and understood all the code that goes
+        into protecting your remoting services. You can read through all the source code and
+        have a good overview of all the bits and pieces of BRAP within an hour.</p>
+        
+      </answer>
+    </faq>
+
+    <faq id="custom-auth">
+      <question>
+        Why do you use custom authentication instead on relying on BASIC auth?
+      </question>
+      <answer>
+        <p>BASIC auth is only suitable when you are supplying a username/password combination.
+        When you authenticate with more variables, you need to "encode" the extra information
+        in either of the two variables, and some things just can't be expressed as plain text.</p>
+
+        <p>BRAP lets you authenticate using your existing domain objects, or one of the supplied
+        principal objects, like UsernamePasswordPrincipal etc.</p>
+      </answer>
+    </faq>
+
+    <faq id="technologies">
+      <question>
+        What technologies does BRAP use?
+      </question>
+      <answer>
+        <p>Brap uses java.lang.reflect.Proxy to intercept method calls, ObjectOutputStream/ObjectInputStream
+        to serialize/deserialize the objects, and URLConnection for HTTP/HTTPS transport.</p>
+      </answer>
+    </faq>
+
+  </part>
+
+</faqs>
