@@ -1,0 +1,282 @@
+                  ------
+               Documentation
+                  ------
+
+Documentation
+
+* Overview
+
+  BRAP provides a simple and convenient way to expose your services via HTTP. BRAP is
+  a Java only remoting protocol, as it uses standard Java object serialization techniques.
+
+  It is very simple to add authentication and custom authorization to BRAP-exposed
+  services.
+
+  The client needs only the service interface method and the service endpoint URL to access
+  the remote service. The remote service only needs a simple entry in web.xml to expose
+  a class implementing the service interface as a remote service.
+
+  For more advanced server configuration scenarios, you can create the service wrapper
+  programatically, or configure the service using Spring. Spring is an optional dependency
+  on the server-side.
+
+* Creating and exposing a remote service
+
+  In this tutorial we will create a simple service interface and implementation to guide you
+  through a common remoting usecase. We start off with the basics and later add authentication
+  and custom authorization.
+
+** Creating the service interface
+
+  Since the client does not have the actual service class on it's classpath, you need to provide an
+  interface to the client. This makes for a very simple and intuitive client usage. We define a simple
+  interface called HelloService for this tutorial:
+
++--
+public interface HelloService {
+    public String sayHello(String name);
+}
++--
+
+** Creating the service implementation
+
+  Let's implement the service interface as well:
+  
++--
+public class HelloServiceImpl implements HelloService {
+    public String sayHello(String name) {
+      return "Hello there, " + name;
+    }
+}
++--
+
+** Exposing the service through web.xml
+
+  We are now ready to expose our service in a servlet container. Make sure you have brap-server.jar and
+  brap-common.jar in your WEB-INF/lib folder.
+
+  Your web.xml must contain a servlet definition and a servlet-mapping for the service:
+  
++--
+<servlet>
+    <servlet-name>hello</servlet-name>
+    <servlet-class>no.tornado.brap.spring.ProxyServlet</servlet-class>
+    <init-param>
+        <param-name>service</param-name>
+        <param-value>com.example.HelloServiceImpl</param-value>
+    </init-param>
+    <init-param>
+      <param-name>authorizationProvider</param-name>
+      <param-value>no.tornado.brap.auth.AuthenticationNotRequiredAuthorizer</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>hello</servlet-name>
+    <url-pattern>/HelloService</url-pattern>
+</servlet-mapping>
++--
+
+  The authorizationProvider will allow unauthenticated access to the exposed service.
+  
+  We map the service to the </HelloService> pathname. This is all you need to expose a remote service!
+
+* Accessing the service from your client
+
+  Using the service from the client involves getting a proxy for the interface and point it
+  to the url of the exposed service:
+
++--
+HelloService helloService = (HelloService) ServiceProxyFactory.
+        createProxy(HelloService.class, "http://localhost:8080/HelloService");
++--
+
+  You can now use the class just as if it was a locally instantiated object:
+
++--
+helloService.sayHello("John Doe");
++--
+
+* Authentication
+
+  To provide authentication, BRAP uses the notion of an
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/AuthenticationProvider.html}AuthenticationProvider}}
+  and an
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/AuthorizationProvider.html}AuthorizationProvider}}.
+
+  When you expose a remoting service, the actual service class
+  is wrapped in a {{{http://brap.tornado.no/apidocs/no/tornado/brap/servlet/ServiceWrapper.html}ServiceWrapper}}.
+
+  In addition to holding an instance of the actual service, the <ServiceWrapper> is also
+  configured with the two mentioned auth-providers.
+
+  The <AuthenticationProvider> is handed the {{{http://brap.tornado.no/apidocs/no/tornado/brap/common/InvocationRequest.html}InvocationRequest}} which contains the credentials from the client
+  and tries to match it to an authenticated principal. If authentication is successful, the credentials are set in the
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/AuthenticationContext.html}AuthenticationContext}}
+  and can be retrieved using <AuthenticationContext.getPrincipal()>.
+
+  The <AuthenticationProvider> must throw an <AuthenticationFailedException> unless the supplied credentials
+  are sufficient.
+
+  The <AuthorizationProvider> then decides if the principal is allowed to invoke the requested method, and may
+  throw a <AuthorizationFailedException>.
+
+  BRAP comes with a number of preconfigured Auth-schemes, making it extremely easy to protect your
+  services with authentication, and implement finegrained or even role-based authorization.
+  It is also very easy to write and install your own providers.
+
+  If you have created your own providers, you can set them directly in web.xml using the <authenticationProvider>
+  and <authorizationProvider> init-parameters:
+
++--
+<init-param>
+    <param-name>authenticationProvider</param-name>
+    <param-value>com.example.MyAuthenticationProvider</param-value>
+</init-param>
+<init-param>
+    <param-name>authorizationProvider</param-name>
+    <param-value>com.example.MyAuthorizationProvider</param-value>
+</init-param>
++--
+
+  The default <AuthenticationProvider> is <AuthenticationNotRequiredAuthorizer>, and does nothing.
+
+  The default <AuthorizationProvider> is <AuthenticationRequiredAuthorizer> and requires any authenticated principal
+  in the <AuthenticationContext>.
+
+  You must therefore either set the <AuthenticationNotRequiredAuthorizer> if you don't want auth, or set an
+  <AuthenticationProvider> that actually authenticates the incoming credentials.
+
+** Adding credentials when accessing the remote service
+
+  To authenticate with credentials, you supply a third argument to the <ServiceProxyFactory#createProxy> method
+  discussed earlier. The third option is called "credentials", and can be an arbitrary object as long as it is serializable.
+
+  We recommend that you use an existing domain object, for example a User as credentials if it makes sense to you.
+
++--
+User user = new User("john", "secret");
+
+HelloService helloService = (HelloService) ServiceProxyFactory.
+        createProxy(HelloService.class, "http://localhost:8080/HelloService", user);
++--
+
+  The user will now be available to the <AuthenticationProvider> in the <InvocationRequest#credentials> property.
+  BRAP comes with a <UsernamePasswordPrincipal> which takes a username/password you can use at your convenience.
+
+  Both the <DatabaseUsernamePasswordAuthenticator> and the <SingleUsernamePasswordAuthenticator> expects the
+  <UsernamePasswordPrincipal>.
+
+  You can later on change both the serviceURI and the credentials to an already created proxy:
+
++--
+ServiceProxyFactory.setServiceURI(helloService, "http://new-endpoint.example.com/HelloService");
+ServiceProxyFactory.setCredentials(helloService, new User("other", "credentials"));
++--
+
+  It is also possible to create your own version of the
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/client/MethodInvocationHandler.html}MethodInvocationHandler}}
+  and override the <getCredentials> and <getServiceURI> methods so that you can supply fresh credentials/url's on
+  every request.
+  
+  Let's revisit the HelloServiceImpl we created earlier, adding a more interesting message:
+
++--
+public class HelloServiceImpl implements HelloService {
+    public String sayHello(String name) {
+      if (AuthenticationContext.getPrincipal() instanceof UsernamePasswordPrincipal) {
+        UsernamePasswordPrincipal upp = (UsernamePasswordPrincipal) AuthenticationContext.getPrincipal();
+        return "Hello " + name + ", you are authenticated as " + upp.getUsername();
+      } else {
+        return "Hello there, " + name + ", you are authenticated with a " + AuthenticationContext.getPrincipal() +
+        ", which I don't know how anything about.";
+      }
+    }
+}
++--
+
+** Instantiating auth-providers programatically
+
+  Some authenticators cannot be created just by init-parameters in web.xml and needs to be
+  constructed programatically. In these cases you have two choices:
+
+  [[1]] Subclass the provider and reference it in web.xml as usual
+
+  [[2]] Subclass the {{{http://brap.tornado.no/apidocs/no/tornado/brap/servlet/ProxyServlet.html}ProxyServlet}}
+  referred in web.xml and override <getServiceWrapper> or just one of <getAuthenticationProvider> or
+  <getAuthorizationProvider>. Please see the javadoc for full details.
+
+** Instantiating the remoting service using Spring
+
+  Chances are you are already using Spring on the server. You should then embrace Spring also for BRAP configuration
+  and create the <ServiceWrapper> directly in your applicationContext.xml:
+
++--
+<bean id="helloRemoteService" class="no.tornado.brap.servlet.ServiceWrapper">
+    <property name="service" ref="helloService"/>
+    <property name="authenticationProvider" ref="authenticationProvider"/>
+    <property name="authorizationProvider" ref="authorizationProvider"/>
+</bean>
+
+<bean id="helloService" class="no.tornado.brap.examples.service.HelloServiceImpl"/>
+
+<bean id="authenticationProvider" class="no.tornado.brap.auth.SingleUsernamePasswordAuthenticator">
+    <property name="username" value="john"/>
+    <property name="password" value="secret"/>
+</bean>
+
+<bean id="authorizationProvider" class="no.tornado.brap.auth.AuthenticationRequiredAuthorizer"/>
++--
+
+    Here we create the servicewrapper, refer to the service bean, and initialize the
+    <SingleUsernamePasswordAuthenticator> with a pre-configured username/password combo.
+
+    The <AuthenticationRequiredAuthorizer> is used to only accept requests that supplied the
+    correct username/password combination, tried by the <SingleUsernamePasswordAuthenticator>.
+
+    Your web.xml will now use the SpringProxyServlet class and only reference the spring-bean:
+
++--
+<servlet>
+    <servlet-name>hello</servlet-name>
+    <servlet-class>no.tornado.brap.spring.SpringProxyServlet</servlet-class>
+    <init-param>
+        <param-name>beanName</param-name>
+        <param-value>helloRemoteService</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
++--
+
+  Make sure you add <brap-spring.jar> to your classpath or include <brap-spring> in your <pom.xml>
+  if you use Maven.
+
+** Authenticating using a database
+
+  If you have a database with your users, you can initialize the
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/DatabaseUsernamePasswordAuthenticator.html}DatabaseUsernamePasswordAuthenticator}}
+  either with Spring or programatically as mentioned above.
+
+  You can subclass the authenticator to provide a different query string. Remember to pass in your datasource in the constructor
+  or using setter injection.
+
+** Authenticate using a custom DAO method
+
+  If is equally easy to implement the <AuthenticationProvider> interface and delegate to either a dao
+  or service for authentication. Just subclass and set the needed resources on your authenticator.
+
+** Protect methods depending on the supplied credentials
+
+  The <AuthorizationProvider> recieves the actual
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/common/InvocationRequest.html}InvocationRequest}}
+  so that it can lookup the actual method being invoked, intercept/modify the method arguments,
+  and check the principal in the AuthenticationContext before authorizing the method invocation.
+
+  The AuthorizationProvider will throw an
+  {{{http://brap.tornado.no/apidocs/no/tornado/brap/exception/AuthorizationFailedException.html}AuthorizationFailedException}}
+  to signal that the supplied credentials were insufficient to invoke the requested method.
+
+* More information
+
+  Please check out the <brap-examples> project for more information and code samples.
