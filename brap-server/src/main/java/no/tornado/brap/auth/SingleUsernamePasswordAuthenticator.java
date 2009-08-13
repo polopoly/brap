@@ -22,10 +22,11 @@ public class SingleUsernamePasswordAuthenticator implements AuthenticationProvid
     public void authenticate(InvocationRequest invocationRequest) throws AuthenticationFailedException {
         if (invocationRequest.getCredentials() != null && invocationRequest.getCredentials() instanceof UsernamePasswordPrincipal) {
             UsernamePasswordPrincipal upp = (UsernamePasswordPrincipal) invocationRequest.getCredentials();
-            if (username.equals(upp.getUsername()) && password.equals(upp.getPassword())) {
+            if (username.equals(upp.getUsername()) && password.equals(upp.getPassword()))
                 AuthenticationContext.setPrincipal(upp);
+            else
                 throw new AuthenticationFailedException("Authentication failed");
-            }
+
         }
         throw new AuthenticationFailedException("Missing credentials");
     }
