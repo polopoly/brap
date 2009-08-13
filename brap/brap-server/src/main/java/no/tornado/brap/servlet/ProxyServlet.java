@@ -154,7 +154,7 @@ public class ProxyServlet implements Servlet {
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
         AuthenticationContext.enter();
         InvocationResponse invocationResponse = null;
-
+        Method method = null;
         try {
             invocationResponse = new InvocationResponse();
 
@@ -163,7 +163,7 @@ public class ProxyServlet implements Servlet {
             serviceWrapper.getAuthenticationProvider().authenticate(invocationRequest);
             serviceWrapper.getAuthorizationProvider().authorize(invocationRequest);
 
-            Method method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
+            method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
 
             Serializable result = (Serializable) method.invoke(serviceWrapper.getService(), invocationRequest.getParameters());
             invocationResponse.setResult(result);
@@ -172,6 +172,13 @@ public class ProxyServlet implements Servlet {
                 InvocationTargetException ite = (InvocationTargetException) e;
                 invocationResponse.setException(ite.getTargetException());
             } else {
+                if (method != null && method.getExceptionTypes() != null) {
+                    for (Class exType : method.getExceptionTypes()) {
+                        if (exType.isAssignableFrom(e.getClass()))
+                            invocationResponse.setException(e);
+                    }
+                }
+                e.printStackTrace();
                 invocationResponse.setException(e);
             }
         } finally {
