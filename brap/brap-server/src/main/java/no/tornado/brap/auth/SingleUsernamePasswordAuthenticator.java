@@ -27,8 +27,8 @@ public class SingleUsernamePasswordAuthenticator implements AuthenticationProvid
             else
                 throw new AuthenticationFailedException("Authentication failed");
 
-        }
-        throw new AuthenticationFailedException("Missing credentials");
+        } else
+            throw new AuthenticationFailedException("Missing credentials");
     }
 
     public String getUsername() {
