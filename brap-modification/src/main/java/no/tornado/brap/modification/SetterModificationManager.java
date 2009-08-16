@@ -10,16 +10,16 @@ import java.util.List;
 /**
  * This modificationmanager tracks changes to objects by proxying each invocation argument object
  * and tracking changes to the setters invoked while the service is executing.
- *
+ * <p/>
  * To configure what objects should be proxied, you define a list of Strings containing
  * either fully qualified classnames or package.* expressions.
- *
+ * <p/>
  * The depth of the object graph is set by the depth field.
  */
 public class SetterModificationManager implements ModificationManager {
     private static final Integer INITIAL_DEPTH = 1;
     private static final Integer DEFAULT_DEPTH = 10;
-    
+
     private Integer depth;
     private List<String> proxyClassDefinitions;
     public ModificationList[] modifications;
@@ -75,14 +75,16 @@ public class SetterModificationManager implements ModificationManager {
         try {
             field.setAccessible(true);
             field.set(object, proxiedChild);
-        } catch (IllegalAccessException fieldSetAccessible) {}
+        } catch (IllegalAccessException fieldSetAccessible) {
+        }
     }
 
     private Object getChildObject(Field field, Object object) {
         field.setAccessible(true);
         try {
             return field.get(object);
-        } catch (IllegalAccessException fieldSetAccessible) {}
+        } catch (IllegalAccessException fieldSetAccessible) {
+        }
         return null;
     }
 
