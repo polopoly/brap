@@ -61,7 +61,8 @@ public class SetterModificationManager implements ModificationManager {
                 if (classShouldBeProxied(field.getType())) {
                     Object childObject = getChildObject(field, object);
                     if (childObject != null) {
-                        Object proxiedChild = createSetterProxy(currentDepth, childObject, parentPath + "." + field.getName(), modificationList);
+                        String path = ("".equals(parentPath) ? field.getName() :  ("." + field.getName()));
+                        Object proxiedChild = createSetterProxy(currentDepth, childObject, path, modificationList);
                         setChildObject(field, object, proxiedChild);
                     }
                 }
@@ -105,4 +106,19 @@ public class SetterModificationManager implements ModificationManager {
 
     }
 
+    public Integer getDepth() {
+        return depth;
+    }
+
+    public void setDepth(Integer depth) {
+        this.depth = depth;
+    }
+
+    public List<String> getProxyClassDefinitions() {
+        return proxyClassDefinitions;
+    }
+
+    public void setProxyClassDefinitions(List<String> proxyClassDefinitions) {
+        this.proxyClassDefinitions = proxyClassDefinitions;
+    }
 }

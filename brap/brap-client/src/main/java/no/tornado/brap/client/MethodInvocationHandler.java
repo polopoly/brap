@@ -126,18 +126,17 @@ public class MethodInvocationHandler implements InvocationHandler {
         Object nestedObject = object;
         Field nestedField = null;
 
-        for (int index = 0; index <= propertyGraph.length - 1; index++) {
-            String property = propertyGraph[index];
+        for (String property : propertyGraph) {
             nestedField = nestedObject.getClass().getDeclaredField(property);
             boolean accessible = nestedField.isAccessible();
             nestedField.setAccessible(true);
-            nestedObject = nestedField.get(object);
+            nestedObject = nestedField.get(nestedObject);
             if (!accessible) nestedField.setAccessible(false);
         }
 
         boolean accessible = nestedField.isAccessible();
         nestedField.setAccessible(true);
-        nestedField.set(object, value);
+        nestedField.set(nestedObject, value);
         if (!accessible) nestedField.setAccessible(false);
     }
 
