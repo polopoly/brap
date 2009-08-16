@@ -14,8 +14,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
@@ -122,18 +121,29 @@ public class MethodInvocationHandler implements InvocationHandler {
     }
 
     private void setModifiedValue(String key, Object value, Object object) throws NoSuchFieldException, IllegalAccessException {
-        String[] propertyGraph = key.split("\\" + PROPERTY_DELIMITER);
+        List<String> propertyGraph = new ArrayList<String>();
+        propertyGraph.addAll(Arrays.asList(key.split("\\" + PROPERTY_DELIMITER)));
+
         Object nestedObject = object;
-        Field nestedField = null;
+        Field nestedField = object.getClass().getDeclaredField(propertyGraph.get(0));
+        propertyGraph.remove(0);
 
         for (String property : propertyGraph) {
-            nestedField = nestedObject.getClass().getDeclaredField(property);
             boolean accessible = nestedField.isAccessible();
             nestedField.setAccessible(true);
-            nestedObject = nestedField.get(nestedObject);
+            Object o = nestedField.get(nestedObject);
             if (!accessible) nestedField.setAccessible(false);
+            Field f = nestedObject.getClass().getDeclaredField(property);
+            accessible = f.isAccessible();
+            f.setAccessible(true);
+            if (!accessible) f.setAccessible(false);
+            if (o != null) {
+                nestedObject = o;
+                nestedField = f;
+            } else {
+                break;
+            }
         }
-
         boolean accessible = nestedField.isAccessible();
         nestedField.setAccessible(true);
         nestedField.set(nestedObject, value);
