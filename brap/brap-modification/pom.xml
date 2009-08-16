@@ -4,17 +4,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-modification</artifactId>
-    <version>${brap.version}</version>
+    <version>0.9-SNAPSHOT</version>
+    <name>BRAP Modification</name>
+    <description>Server addon that emulates "pass-by-reference" for method arguments, so that
+    changes applied on the server is visible on the client after the method invocation returns.
+    </description>
     <parent>
-        <artifactId>brap</artifactId>
         <groupId>no.tornado.brap</groupId>
-        <version>${brap.version}</version>
+        <artifactId>brap</artifactId>
+        <version>0.9-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-server</artifactId>
-            <version>${brap.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

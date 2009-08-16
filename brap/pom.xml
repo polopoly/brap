@@ -5,16 +5,16 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap</artifactId>
     <packaging>pom</packaging>
-    <version>${brap.version}</version>
+    <version>0.9-SNAPSHOT</version>
     <url>http://brap.tornado.no/</url>
     <name>BRAP</name>
     <modules>
         <module>brap-common</module>
         <module>brap-client</module>
         <module>brap-server</module>
+        <module>brap-modification</module>
         <module>brap-spring</module>
         <module>brap-examples</module>
-        <module>brap-modification</module>
     </modules>
     <description>
         BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
@@ -119,7 +119,4 @@
             </plugin>
         </plugins>
     </reporting>
-    <properties>
-        <brap.version>0.9-SNAPSHOT</brap.version>
-    </properties>
 </project>

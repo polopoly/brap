@@ -3,9 +3,9 @@ package no.tornado.brap.servlet;
 import no.tornado.brap.auth.*;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
+import no.tornado.brap.exception.RemotingException;
 import no.tornado.brap.modification.ChangesIgnoredModificationManager;
 import no.tornado.brap.modification.ModificationManager;
-import no.tornado.brap.exception.RemotingException;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -18,17 +18,17 @@ import java.lang.reflect.Method;
 /**
  * This ProxyServlet is configured from web.xml for each service you wish
  * to expose as a remoting service.
- *
+ * <p/>
  * This class provides the basic capabilities needed to instantiate and expose
  * a remoting service. Only <code>service</code> is required. The rest of
  * the parameters have default values.
- *
+ * <p/>
  * Concider subclassing to provide custom creation by overriding
  * <code>getServiceWrapper</code> or just one of
  * <code>getAuthenticationProvider</code> or <code>getAuthorizationProvider</code>.
- *
+ * <p/>
  * <p>Example of exposing a remoting service without requiring authentication:</p>
- *<pre>
+ * <pre>
  *  &lt;servlet&gt;
  *      &lt;servlet-name&gt;hello&lt;/servlet-name&gt;
  *      &lt;servlet-class&gt;no.tornado.brap.servlet.ProxyServlet&lt;/servlet-class&gt;
@@ -46,9 +46,7 @@ import java.lang.reflect.Method;
  *      &lt;servlet-name&gt;hello&lt;/servlet-name&gt;
  *      &lt;url-pattern&gt;/remoting/hello&lt;/url-pattern&gt;
  *  &lt;/servlet-mapping&gt;
- *</pre>
- *
- *
+ * </pre>
  */
 public class ProxyServlet implements Servlet {
     public final String INIT_PARAM_AUTHENTICATION_PROVIDER = "authenticationProvider";
@@ -70,7 +68,7 @@ public class ProxyServlet implements Servlet {
 
     /**
      * Override this method to control every detail of the creation of the service wrapper.
-     *
+     * <p/>
      * Normally you would just override one or more of the methods that provide the service wrapper details.
      *
      * @see ProxyServlet#getService()
@@ -90,7 +88,7 @@ public class ProxyServlet implements Servlet {
      * an AuthenticationProvider is sufficient, but you can use the Authorization Provider
      * to allow/deny access to spesific method-calls based on the principal in
      * <code>AuthenticationContext#getPrincipal()</code>.
-     *
+     * <p/>
      * You can either subclass or supply the "authorizationProvider" init-param to
      * change the AuthorizationProvider.
      *
@@ -106,7 +104,7 @@ public class ProxyServlet implements Servlet {
     /**
      * Override to configure a different Authentication Provider. The default provider
      * authenticates every invocation.
-     *
+     * <p/>
      * You can either subclass or supply the "authenticationProvider" init-param to
      * change the AuthenticationProvider.
      *
@@ -121,7 +119,7 @@ public class ProxyServlet implements Servlet {
 
     /**
      * Supply the service to expose via this servlet.
-     *
+     * <p/>
      * You can either subclass or supply the "service" init-param to
      * configure what service class to instantiate.
      *
@@ -134,24 +132,23 @@ public class ProxyServlet implements Servlet {
     /**
      * The service method performs the actual deserialization of the InvocationRequest and returns
      * an InvocationResponse in the body of the ServletResponse.
-     *
+     * <p/>
      * Standard Java object serialization/deserialization is used to retrieve and set the invocation
      * request/response.
-     *
+     * <p/>
      * The configured <code>AuthenticationProvider</code> and <code>AuthorizationProvider</code>
      * are consulted.
-     *
+     * <p/>
      * A ThreadLocal in the <code>AuthenticationContext</code> holds on to any principal created during
      * authentication, so that it is available to both the AuthorizationProvider and any service
      * that whishes to get hold of the principal via <code>AuthenticationContext#getPrincipal()</code>.
-     *
+     * <p/>
      * You are encouraged to use your existing domain object AllowAllAuthorizerfor authentication :)
-     * 
-     * @param request The ServletRequest
+     *
+     * @param request  The ServletRequest
      * @param response the ServletResponse
      * @throws ServletException
      * @throws IOException
-     *
      * @see no.tornado.brap.common.InvocationRequest
      * @see no.tornado.brap.common.InvocationResponse
      */
