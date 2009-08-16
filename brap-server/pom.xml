@@ -43,7 +43,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            no.tornado.brap.auth, no.tornado.brap.servlet
+                            no.tornado.brap.auth, no.tornado.brap.servlet, no.tornado.brap.modification
                         </Export-Package>
                         <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
                     </instructions>
