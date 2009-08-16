@@ -21,6 +21,12 @@ public class InvocationResponse implements Serializable {
      */
     private Serializable result;
 
+    /**
+     * List of modifications that occured on the server while executing the remote operation.
+     * The ServiceProxy will apply the changes to the local argument objects after method invocation returns.
+     */
+    private ModificationList[] modifications;
+
     public Throwable getException() {
         return exception;
     }
@@ -35,5 +41,13 @@ public class InvocationResponse implements Serializable {
 
     public void setResult(Serializable result) {
         this.result = result;
+    }
+
+    public ModificationList[] getModifications() {
+        return modifications;
+    }
+
+    public void setModifications(ModificationList[] modifications) {
+        this.modifications = modifications;
     }
 }

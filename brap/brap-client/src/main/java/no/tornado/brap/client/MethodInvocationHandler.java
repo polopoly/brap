@@ -2,16 +2,20 @@ package no.tornado.brap.client;
 
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
-import no.tornado.brap.exception.CommunicationException;
+import no.tornado.brap.common.ModificationList;
+import no.tornado.brap.exception.RemotingException;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
@@ -25,6 +29,7 @@ import java.net.URLConnection;
 public class MethodInvocationHandler implements InvocationHandler {
     private String serviceURI;
     private Serializable credentials;
+    private static final String PROPERTY_DELIMITER = ".";
 
     /**
      * Default constructor to use if you override <code>getServiceURI</code>
@@ -82,14 +87,58 @@ public class MethodInvocationHandler implements InvocationHandler {
 
             ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
             response = (InvocationResponse) in.readObject();
+
+            applyModifications(args, response.getModifications());
         } catch (IOException e) {
-            throw new CommunicationException(e);
+            throw new RemotingException(e);
         }
 
         if (response.getException() != null)
             throw response.getException();
 
         return response.getResult();
+    }
+
+    private void applyModifications(Object[] args, ModificationList[] modifications) {
+        if (modifications != null) {
+            for (int i = 0; i < modifications.length; i++) {
+                ModificationList mods = modifications[i];
+                if (mods != null) {
+                    Iterator<Map.Entry<String, Object>> it = mods.getModifiedProperties().entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, Object> entry = it.next();
+                        try {
+                            setModifiedValue(entry.getKey(), entry.getValue(), args[i]);
+                        } catch (NoSuchFieldException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    private void setModifiedValue(String key, Object value, Object object) throws NoSuchFieldException, IllegalAccessException {
+        String[] propertyGraph = key.split("\\" + PROPERTY_DELIMITER);
+        Object nestedObject = object;
+        Field nestedField = null;
+
+        for (int index = 0; index <= propertyGraph.length - 1; index++) {
+            String property = propertyGraph[index];
+            nestedField = nestedObject.getClass().getDeclaredField(property);
+            boolean accessible = nestedField.isAccessible();
+            nestedField.setAccessible(true);
+            nestedObject = nestedField.get(object);
+            if (!accessible) nestedField.setAccessible(false);
+        }
+
+        boolean accessible = nestedField.isAccessible();
+        nestedField.setAccessible(true);
+        nestedField.set(object, value);
+        if (!accessible) nestedField.setAccessible(false);
     }
 
     /**
