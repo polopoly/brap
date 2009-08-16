@@ -3,14 +3,17 @@ package no.tornado.brap.servlet;
 import no.tornado.brap.auth.*;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
+import no.tornado.brap.modification.ChangesIgnoredModificationManager;
+import no.tornado.brap.modification.ModificationManager;
+import no.tornado.brap.exception.RemotingException;
 
 import javax.servlet.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * This ProxyServlet is configured from web.xml for each service you wish
@@ -50,6 +53,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ProxyServlet implements Servlet {
     public final String INIT_PARAM_AUTHENTICATION_PROVIDER = "authenticationProvider";
     public final String INIT_PARAM_AUTHORIZATION_PROVIDER = "authorizationProvider";
+    public final String INIT_PARAM_MODIFICATION_MANAGER = "modificationManager";
     public final String INIT_PARAM_SERVICE = "service";
 
     protected ServiceWrapper serviceWrapper;
@@ -162,11 +166,13 @@ public class ProxyServlet implements Servlet {
 
             serviceWrapper.getAuthenticationProvider().authenticate(invocationRequest);
             serviceWrapper.getAuthorizationProvider().authorize(invocationRequest);
-
+            Object[] proxiedParameters = serviceWrapper.getModificationManager().applyModificationScheme(invocationRequest.getParameters());
             method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
 
-            Serializable result = (Serializable) method.invoke(serviceWrapper.getService(), invocationRequest.getParameters());
+            Serializable result = (Serializable) method.invoke(serviceWrapper.getService(), proxiedParameters);
             invocationResponse.setResult(result);
+            invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
+
         } catch (Exception e) {
             if (e instanceof InvocationTargetException) {
                 InvocationTargetException ite = (InvocationTargetException) e;
@@ -178,13 +184,19 @@ public class ProxyServlet implements Servlet {
                             invocationResponse.setException(e);
                     }
                 }
-                e.printStackTrace();
-                invocationResponse.setException(e);
+                invocationResponse.setException(new RemotingException(e));
             }
         } finally {
             AuthenticationContext.exit();
             new ObjectOutputStream(response.getOutputStream()).writeObject(invocationResponse);
         }
+    }
+
+    public ModificationManager getModificationManager() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        if (servletConfig.getInitParameter(INIT_PARAM_MODIFICATION_MANAGER) != null)
+            return (ModificationManager) Class.forName(servletConfig.getInitParameter(INIT_PARAM_MODIFICATION_MANAGER)).newInstance();
+
+        return new ChangesIgnoredModificationManager();
     }
 
     /**

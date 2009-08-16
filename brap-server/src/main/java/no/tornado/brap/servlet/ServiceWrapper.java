@@ -2,6 +2,7 @@ package no.tornado.brap.servlet;
 
 import no.tornado.brap.auth.AuthenticationProvider;
 import no.tornado.brap.auth.AuthorizationProvider;
+import no.tornado.brap.modification.ModificationManager;
 
 /**
  * The ServiceWrapper holds the service object to expose via remoting
@@ -36,6 +37,14 @@ public class ServiceWrapper {
      */
     private AuthorizationProvider authorizationProvider;
 
+
+    /**
+     * The modification manager will track changes to the argument objects and agrregate them
+     * so that the same changes can be applied on the client. The default modification manager
+     * does nothing.
+     */
+    private ModificationManager modificationManager;
+
     /* Getters and setters */
     public Object getService() {
         return service;
@@ -61,4 +70,11 @@ public class ServiceWrapper {
         this.authorizationProvider = authorizationProvider;
     }
 
+    public ModificationManager getModificationManager() {
+        return modificationManager;
+    }
+
+    public void setModificationManager(ModificationManager modificationManager) {
+        this.modificationManager = modificationManager;
+    }
 }
