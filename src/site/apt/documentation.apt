@@ -285,10 +285,10 @@ public class HelloServiceImpl implements HelloService {
   will not be visible on the client after the call.
 
   BRAP has an addon-module that will automatically sync changes on your object arguments
-  that happen on the server side, so that you can enjoy "pass by reference" even if the objects
-  are serialized and detached.
+  that happen on the server side, so that you can enjoy "pass by reference"-like behaviour
+  even when the objects are serialized and detached.
 
-  Yo use this feature, add the <brap-modification> jar to your project and configure the
+  To use this feature, add the <brap-modification> jar to your project and configure the
   <modificationManager>.
 
   For web.xml remoting configuration, you add another param:
