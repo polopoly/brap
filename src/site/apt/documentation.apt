@@ -277,6 +277,55 @@ public class HelloServiceImpl implements HelloService {
   {{{http://brap.tornado.no/apidocs/no/tornado/brap/exception/AuthorizationFailedException.html}AuthorizationFailedException}}
   to signal that the supplied credentials were insufficient to invoke the requested method.
 
+* Pass by reference
+
+  When you send an object as an argument from the client, the remote service might change some
+  properties on that object. Let's say for example that you call myservice.saveUser(user) with
+  your domain object user. The service might set the user.id field after save, but this property
+  will not be visible on the client after the call.
+
+  BRAP has an addon-module that will automatically sync changes on your object arguments
+  that happen on the server side, so that you can enjoy "pass by reference" even if the objects
+  are serialized and detached.
+
+  Yo use this feature, add the <brap-modification> jar to your project and configure the
+  <modificationManager>.
+
+  For web.xml remoting configuration, you add another param:
+
++--
+    <init-param>
+        <param-name>modificationManager</param-name>
+        <param-value>no.tornado.brap.modification.SetterModificationManager</param-value>
+    </init-param>
++--
+
+  For Spring configuration in applicationContext.xml:
+
++--
+    <bean id="helloService" class="no.tornado.brap.servlet.ServiceWrapper">
+        [...]
+        <property name="modificationManager" ref="modificationManager"/>
+    </bean>
+
+    <bean id="modificationManager" class="no.tornado.brap.modification.SetterModificationManager">
+        <property name="depth" value="25"/>
+        <property name="proxyClassDefinitions">
+            <list>
+                <value>com.example.domain.*</value>
+            </list>
+        </property>
+    </bean>
++--
+
+  The Spring example above also sets the depth of the object graph to look for changes,
+  and what classes of properties should be watched for changes under the subsequent
+  depth levels.
+
+  If you don't use Spring and want to modify <depth> and <proxyClassDefinitions> you
+  can subclass the SetterModificationManager and override the <depth> and <proxyClassDefinition>
+  getters.
+
 * More information
 
   Please check out the <brap-examples> project for more information and code samples.
