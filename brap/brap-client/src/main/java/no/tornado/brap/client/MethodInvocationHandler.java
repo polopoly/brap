@@ -20,15 +20,14 @@ import java.util.*;
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
  * of the supplied interface. It intercepts all method-calls and sends them
  * to the server and returns the invocation result.
- *
+ * <p/>
  * The recommended way to retrieve a service proxy is to call one of the static methods
  * in the <code>ServiceProxyFactory</code>.
- *
  */
 public class MethodInvocationHandler implements InvocationHandler {
     private String serviceURI;
     private Serializable credentials;
-    private static final String PROPERTY_DELIMITER = ".";
+    private static final String REGEXP_PROPERTY_DELIMITER = "\\.";
 
     /**
      * Default constructor to use if you override <code>getServiceURI</code>
@@ -39,11 +38,11 @@ public class MethodInvocationHandler implements InvocationHandler {
 
     /**
      * Creates the service proxy on the given URI with the given credentials.
-     *
+     * <p/>
      * Credentials can be changed using the ServiceProxyFactory#setCredentials method.
      * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
      *
-     * @param serviceURI The URI to the remote service
+     * @param serviceURI  The URI to the remote service
      * @param credentials An object used to authenticate/authorize the request
      */
     public MethodInvocationHandler(String serviceURI, Serializable credentials) {
@@ -53,7 +52,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 
     /**
      * Creates the service proxy on the given URI.
-     *
+     * <p/>
      * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
      *
      * @param serviceURI The URI to the remote service
@@ -64,17 +63,16 @@ public class MethodInvocationHandler implements InvocationHandler {
 
     /**
      * Intercepts the method call towards the proxy and sends the call over HTTP.
-     *
+     * <p/>
      * If an exception is thrown on the server-side, it will be re-thrown to the caller.
-     *
+     * <p/>
      * The return value of the method invocation is returned.
      *
      * @return Object the result of the method invocation
-     *
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
         InvocationResponse response;
-        
+
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
@@ -121,41 +119,37 @@ public class MethodInvocationHandler implements InvocationHandler {
     }
 
     private void setModifiedValue(String key, Object value, Object object) throws NoSuchFieldException, IllegalAccessException {
-        List<String> propertyGraph = new ArrayList<String>();
-        propertyGraph.addAll(Arrays.asList(key.split("\\" + PROPERTY_DELIMITER)));
+        String[] propertyGraph = key.split(REGEXP_PROPERTY_DELIMITER);
+        int i = 0;
 
-        Object nestedObject = object;
-        Field nestedField = object.getClass().getDeclaredField(propertyGraph.get(0));
-        propertyGraph.remove(0);
+        for (; i < propertyGraph.length - 1; i++)
+            object = getValue(object, object.getClass().getDeclaredField(propertyGraph[i]));
 
-        for (String property : propertyGraph) {
-            boolean accessible = nestedField.isAccessible();
-            nestedField.setAccessible(true);
-            Object o = nestedField.get(nestedObject);
-            if (!accessible) nestedField.setAccessible(false);
-            Field f = nestedObject.getClass().getDeclaredField(property);
-            accessible = f.isAccessible();
-            f.setAccessible(true);
-            if (!accessible) f.setAccessible(false);
-            if (o != null) {
-                nestedObject = o;
-                nestedField = f;
-            } else {
-                break;
-            }
-        }
-        boolean accessible = nestedField.isAccessible();
-        nestedField.setAccessible(true);
-        nestedField.set(nestedObject, value);
-        if (!accessible) nestedField.setAccessible(false);
+        setValue(object, object.getClass().getDeclaredField(propertyGraph[i]), value);
     }
+
+    private void setValue(Object object, Field field, Object value) throws IllegalAccessException {
+        boolean accessible = field.isAccessible();
+        if (!accessible) field.setAccessible(true);
+        field.set(object, value);
+        if (!accessible) field.setAccessible(false);
+    }
+
+    private Object getValue(Object object, Field field) throws IllegalAccessException {
+        boolean accessible = field.isAccessible();
+        if (!accessible) field.setAccessible(true);
+        Object value = field.get(object);
+        if (!accessible) field.setAccessible(false);
+        return value;
+    }
+
 
     /**
      * Getter for the ServiceURI. Override if you need a more dynamic serviceURI
      * than just setting the value.
      *
      * @return The serviceURI for subsequent method invocations.
-     * @see no.tornado.brap.client.ServiceProxyFactory#setServiceURI(Object, String) 
+     * @see no.tornado.brap.client.ServiceProxyFactory#setServiceURI(Object, String)
      */
     public String getServiceURI() {
         return serviceURI;
