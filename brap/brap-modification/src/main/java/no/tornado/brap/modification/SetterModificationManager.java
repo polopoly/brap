@@ -91,7 +91,7 @@ public class SetterModificationManager implements ModificationManager {
 
     private boolean classShouldBeProxied(Class candidate) {
         for (String classDefinition : proxyClassDefinitions) {
-            if (candidate.getCanonicalName().startsWith(classDefinition))
+            if (candidate.getCanonicalName().startsWith(classDefinition.replace("*", "")))
                 return true;
         }
         return false;
