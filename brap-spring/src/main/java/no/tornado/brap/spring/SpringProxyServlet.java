@@ -2,6 +2,10 @@ package no.tornado.brap.spring;
 
 import no.tornado.brap.servlet.ProxyServlet;
 import no.tornado.brap.servlet.ServiceWrapper;
+import no.tornado.brap.modification.ModificationManager;
+import no.tornado.brap.modification.ChangesIgnoredModificationManager;
+import no.tornado.brap.auth.AuthenticationNotRequiredAuthenticator;
+import no.tornado.brap.auth.AuthenticationRequiredAuthorizer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -63,5 +67,15 @@ public class SpringProxyServlet extends ProxyServlet {
             throw new RuntimeException("You must provide the \"beanName\" init-param to the SpringProxyServlet.");
 
         serviceWrapper = (ServiceWrapper) applicationContext.getBean(beanName);
+
+        if (serviceWrapper.getAuthenticationProvider() == null)
+            serviceWrapper.setAuthenticationProvider(new AuthenticationNotRequiredAuthenticator());
+
+        if (serviceWrapper.getAuthorizationProvider() == null)
+            serviceWrapper.setAuthorizationProvider(new AuthenticationRequiredAuthorizer());
+
+        if (serviceWrapper.getModificationManager() == null)
+            serviceWrapper.setModificationManager( new ChangesIgnoredModificationManager());
     }
+
 }
