@@ -4,7 +4,7 @@
 
 Getting BRAP
 
-  BRAP 0.9 is the latest stable release.
+  BRAP 0.9.1 is the latest stable release. Please see {{{http://jira.brap.tornado.no/secure/ReleaseNote.jspa?version=10001&styleName=HTML&projectId=10000&Create=Create}the release notes}} for more information.
 
 * Download
 
@@ -14,8 +14,6 @@ Getting BRAP
 
   Both the client and server needs the brap-common package. There are no external dependencies.
 
-  The total size including dependencies is 9 kb for the client and 17 kb for the server.
-  
 * Maven
 
   All releases are available in the {{{http://repo1.maven.org/maven2/no/tornado/brap}central Maven repository}}. Add the following to your pom.xml:
@@ -25,28 +23,35 @@ Getting BRAP
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-client</artifactId>
-  <version>0.9</version>
+  <version>0.9.1</version>
 </dependency>
 
 <!-- Server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-server</artifactId>
-  <version>0.9</version>
+  <version>0.9.1</version>
 </dependency>
 
 <!-- Optional Spring support on the server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-spring</artifactId>
-  <version>0.9</version>
+  <version>0.9.1</version>
+</dependency>
+
+<!-- Optional modification support on the server -->
+<dependency>
+  <groupId>no.tornado.brap</groupId>
+  <artifactId>brap-modification</artifactId>
+  <version>0.9.1</version>
 </dependency>
 
 <!-- Optional Examples project -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-examples</artifactId>
-  <version>0.9</version>
+  <version>0.9.1</version>
 </dependency>
 +--
 
