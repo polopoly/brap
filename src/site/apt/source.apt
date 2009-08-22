@@ -8,5 +8,5 @@ Source Code for BRAP
   an anonymous checkout:
 
 +--
-svn co http://brap.tornado.no/brap brap
+svn co http://brap.subversion.no/brap/trunk/brap brap
 +--
