@@ -5,13 +5,13 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-client</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9.1</version>
+    <version>0.9-SNAPSHOT</version>
     <name>BRAP Client</name>
     <description>Client Library for connecting to a BRAP-exposed remoting service.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9.1</version>
+        <version>0.9-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
