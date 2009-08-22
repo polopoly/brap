@@ -1,0 +1,16 @@
+* Update pom's to <release-number>
+* Copy trunk to releases/<release-number>
+
+mvn clean install -DperformRelease=true
+mvn deploy -DperformRelease=true
+
+* Update brap/src/assemble/all.xml to reflect <release-number>
+
+mvn deploy-site -DperformRelease=true
+mvn package assembly:assembly -DperformRelease=true
+
+* Copy brap-<release-number>-all.zip to site/releases
+
+* Update pom's to SNAPSHOT
+* CI trunk
+
