@@ -80,6 +80,7 @@ public class ProxyServlet implements Servlet {
         serviceWrapper.setService(getService());
         serviceWrapper.setAuthenticationProvider(getAuthenticationProvider());
         serviceWrapper.setAuthorizationProvider(getAuthorizationProvider());
+        serviceWrapper.setModificationManager(getModificationManager());
     }
 
     /**
