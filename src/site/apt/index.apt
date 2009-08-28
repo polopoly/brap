@@ -40,7 +40,7 @@ MyService myService = (MyService) ServiceProxyFactory
     <param-value>com.example.HelloServiceImpl</param-value>
   </init-param>
   <init-param>
-    <param-name>authenticationProvider</param-name>
+    <param-name>authorizationProvider</param-name>
     <param-value>no.tornado.brap.auth.AuthenticationNotRequiredAuthorizer</param-value>
   </init-param>
 </servlet>
