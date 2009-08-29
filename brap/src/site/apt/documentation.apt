@@ -88,11 +88,11 @@ public class HelloServiceImpl implements HelloService {
   to the url of the exposed service:
 
 +--
-HelloService helloService = (HelloService) ServiceProxyFactory.
-        createProxy(HelloService.class, "http://localhost:8080/HelloService");
+HelloService helloService = ServiceProxyFactory.createProxy(HelloService.class, "http://localhost:8080/HelloService");
 +--
 
-  You can now use the class just as if it was a locally instantiated object:
+  Note that you don't need to cast the result from the createProxy, due to generics. You can now use the class just as
+  if it was a locally instantiated object:
 
 +--
 helloService.sayHello("John Doe");
