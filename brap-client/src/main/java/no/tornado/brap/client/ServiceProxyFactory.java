@@ -35,8 +35,8 @@ public class ServiceProxyFactory {
      * @return A service proxy that implements the given serviceInterface
      *
      */
-    public static Object createProxy(Class serviceInterface, String serviceURI) {
-        return Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(serviceURI));
+    public static <T> T createProxy(Class<? extends T> serviceInterface, String serviceURI) {
+        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(serviceURI));
     }
 
     /**
@@ -50,8 +50,8 @@ public class ServiceProxyFactory {
      * @return A service proxy that implements the given serviceInterface
      *
      */
-    public static Object createProxy(Class serviceInterface, String serviceURI, Serializable credentials) {
-        return Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(serviceURI, credentials));
+    public static <T> T createProxy(Class<? extends T> serviceInterface, String serviceURI, Serializable credentials) {
+        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(serviceURI, credentials));
     }
 
     /**
@@ -65,8 +65,8 @@ public class ServiceProxyFactory {
      * @param methodInvocationHandler The already instantiated MethodInvocationHandler
      * @return A service proxy that implements the given serviceInterface
      */
-    public static Object createProxy(Class serviceInterface, MethodInvocationHandler methodInvocationHandler) {
-        return Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, methodInvocationHandler);
+    public static <T> T createProxy(Class<? extends T> serviceInterface, MethodInvocationHandler methodInvocationHandler) {
+        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, methodInvocationHandler);
     }
 
     /**
