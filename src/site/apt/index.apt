@@ -25,8 +25,7 @@ Binary Remoting and Authentication Protocol
 * Accessing a remote service is simple:
 
 +--
-MyService myService = (MyService) ServiceProxyFactory
-	.createProxy(MyService.class, "http://example.com/MyService");
+MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://example.com/MyService");
 +--
 
 * Servlet configuration in web.xml:
