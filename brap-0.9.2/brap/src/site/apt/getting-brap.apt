@@ -1,0 +1,72 @@
+                  ------
+               Getting BRAP
+                  ------
+
+Getting BRAP
+
+  BRAP 0.9.2 is the latest stable release. Please see {{{http://jira.brap.tornado.no/secure/ReleaseNote.jspa?version=10001&styleName=HTML&projectId=10000&Create=Create}the release notes}} for more information.
+
+* Download
+
+  Get the {{{http://brap.tornado.no/releases/brap-0.9.2-all.zip}latest release}} containing client, server, spring support, examples and dependencies.
+
+* Dependencies
+
+  Both the client and server needs the brap-common package. There are no external dependencies.
+
+* Maven
+
+  All releases are available in the {{{http://repo1.maven.org/maven2/no/tornado/brap}central Maven repository}}. Add the following to your pom.xml:
+
++--
+<!-- Client -->
+<dependency>
+  <groupId>no.tornado.brap</groupId>
+  <artifactId>brap-client</artifactId>
+  <version>0.9.2</version>
+</dependency>
+
+<!-- Server -->
+<dependency>
+  <groupId>no.tornado.brap</groupId>
+  <artifactId>brap-server</artifactId>
+  <version>0.9.2</version>
+</dependency>
+
+<!-- Optional Spring support on the server -->
+<dependency>
+  <groupId>no.tornado.brap</groupId>
+  <artifactId>brap-spring</artifactId>
+  <version>0.9.2</version>
+</dependency>
+
+<!-- Optional modification support on the server -->
+<dependency>
+  <groupId>no.tornado.brap</groupId>
+  <artifactId>brap-modification</artifactId>
+  <version>0.9.2</version>
+</dependency>
+
+<!-- Optional Examples project -->
+<dependency>
+  <groupId>no.tornado.brap</groupId>
+  <artifactId>brap-examples</artifactId>
+  <version>0.9.2</version>
+</dependency>
++--
+
+  Snapshots are available at {{http://brap.tornado.no/maven/snapshots}}. If you want to use a snapshot, add
+  the following to your pom.xml:
+
++--
+<repositories>
+    <repository>
+        <name>BRAP Snapshots Repository</name>
+        <url>http://brap.tornado.no/maven/snapshots</url>
+    </repository>
+</repositories>
++--
+
+* Source code
+
+  All source code is available online. See the {{{source.html}source}} page for more information.

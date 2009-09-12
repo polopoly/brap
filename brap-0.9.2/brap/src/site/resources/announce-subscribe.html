@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>BRAP Accounce</title>
+    <style type="text/css">
+    body {
+        font-family: sans-serif;
+        width: 640px;
+        margin: 40px auto 0;
+        color: #444;
+    }
+    h1 {
+        border-bottom: 1px solid #ccc;
+    }
+    a {
+        font-weight: bold;
+        text-decoration: none;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    p.actions input {
+        float: right;
+    }
+    dl {
+        margin-top: 6px;
+        padding: 0 6px;
+    }
+    legend,
+    dt { font-weight: bold; }
+    dd {
+        padding-left: 0;
+        margin-left: 0;
+    }
+    dd input { width: 100%; }
+    input.error { border: 1px solid red; }
+	dt.error { color: red; }
+    </style>
+</head>
+<body>
+
+
+    <h1>BRAP Announce</h1>
+    <div style="overflow :hidden;">
+        <form action="http://announce.brap.tornado.no/list/s" method="post" style="float: left; width: 40%;">
+            <fieldset id="subscribe">
+            <legend>Subscribe</legend>
+                <dl>
+                    <dt class="ok">Email address</dt>
+                    <dd><input class="ok" type="text" name="address" value=""/></dd>
+                </dl>
+                <p class="actions">
+                    <input type="submit" value="Subscribe"/>
+                </p>
+
+            </fieldset>
+        </form>
+
+        <div style="width: 55%; float: right;">
+            <p>Insert your email address and click "Subscribe" to subscribe to the list.</p>
+            <p>You will recieve a confirmation message shortly where you need to click the supplied link to confirm.</p>
+        </div>
+    </div>
+
+
+    <div style="overflow :hidden; clear: both;">
+        <form action="http://announce.brap.tornado.no/list/u" method="post" style="float: left; width: 40%;">
+            <fieldset id="subscribe">
+            <legend>Unsubscribe</legend>
+                <dl>
+                    <dt class="ok">Email address</dt>
+                    <dd><input class="ok" type="text" name="address" value=""/></dd>
+                </dl>
+                <p class="actions">
+                    <input type="submit" value="subscribe"/>
+                </p>
+
+            </fieldset>
+        </form>
+
+        <div style="width: 55%; float: right;">
+            <p>Insert your email address and click "Unsubscribe" to unsubscribe from the list.</p>
+            <p>You will recieve a confirmation message shortly where you need to click the supplied link to confirm.</p>
+        </div>
+    </div>
+</body>
+</html>
