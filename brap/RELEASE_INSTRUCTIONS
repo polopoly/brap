@@ -7,7 +7,7 @@ mvn deploy -DperformRelease=true
 
 * Update brap/src/assemble/all.xml to reflect <release-number>
 
-mvn deploy-site -DperformRelease=true
+mvn site-deploy -DperformRelease=true
 mvn package assembly:assembly -DperformRelease=true
 
 * Copy brap-<release-number>-all.zip to site/releases
