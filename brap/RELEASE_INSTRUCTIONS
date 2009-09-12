@@ -1,5 +1,5 @@
 * Update pom's to <release-number>
-* Update <release-number> in site/getting-brap.apt, index.apt and documentation.apt
+* Update <release-number> in site/getting-brap.apt, index.apt
 * Copy trunk to releases/<release-number>
 
 mvn clean install -DperformRelease=true
