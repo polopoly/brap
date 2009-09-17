@@ -10,5 +10,18 @@
                 Initial release.
             </action>
         </release>
+        <release version="0.9.1" date="2009-08-22" description="">
+            <action dev="Edvin Syse" type="add">
+                Automatically sync changes to method arguments from the server to the client
+            </action>
+            <action dev="Edvin Syse" type="fix">
+                SingleUsernamePasswordAuthenticator throws AuthenticationFailedException even with correct credentials
+            </action>
+        </release>
+        <release version="0.9.2" date="2009-09-12" description="">
+            <action dev="Edvin Syse" type="add">
+                Support for generics on the client
+            </action>
+        </release>
     </body>
 </document>
