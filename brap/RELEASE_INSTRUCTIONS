@@ -1,4 +1,5 @@
 * Update pom's to <release-number>
+* Update src/changes/changes.xml
 * Update <release-number> in site/getting-brap.apt, index.apt
 * Copy trunk to releases/<release-number>
 

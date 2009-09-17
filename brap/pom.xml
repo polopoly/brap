@@ -116,6 +116,20 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changes-maven-plugin</artifactId>
+                <configuration>
+                    <smtpHost>smtp.sysedata.no</smtpHost>
+                    <smtpPort implementation="java.lang.Integer">25</smtpPort>
+                    <toAddresses>
+                        <toAddress implementation="java.lang.String">edvin@sysedata.no</toAddress>
+                    </toAddresses>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
