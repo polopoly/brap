@@ -208,7 +208,17 @@ public class ProxyServlet implements Servlet {
      * @throws NoSuchMethodException
      */
     private Method getMethod(String methodName, Class[] parameterTypes) throws NoSuchMethodException {
-        return serviceWrapper.getService().getClass().getMethod(methodName, parameterTypes);
+        Class serviceClass = serviceWrapper.getService().getClass();
+
+        while (serviceClass != null) {
+            try {
+                return serviceClass.getMethod(methodName, parameterTypes);
+            } catch (NoSuchMethodException e) {
+                serviceClass = serviceClass.getSuperclass();
+            }
+        }
+
+        throw new NoSuchMethodException(methodName);
     }
 
     public String getServletInfo() {
