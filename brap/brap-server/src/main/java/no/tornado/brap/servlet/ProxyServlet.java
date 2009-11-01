@@ -8,10 +8,7 @@ import no.tornado.brap.modification.ChangesIgnoredModificationManager;
 import no.tornado.brap.modification.ModificationManager;
 
 import javax.servlet.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -49,11 +46,13 @@ import java.lang.reflect.Method;
  * </pre>
  */
 public class ProxyServlet implements Servlet {
+    private static final Integer DEFAULT_STREAM_BUFFER_SIZE = 16384;
+
     public final String INIT_PARAM_AUTHENTICATION_PROVIDER = "authenticationProvider";
     public final String INIT_PARAM_AUTHORIZATION_PROVIDER = "authorizationProvider";
     public final String INIT_PARAM_MODIFICATION_MANAGER = "modificationManager";
-    public final String INIT_PARAM_SERVICE = "service";
 
+    public final String INIT_PARAM_SERVICE = "service";
     protected ServiceWrapper serviceWrapper;
     protected ServletConfig servletConfig;
 
@@ -157,6 +156,7 @@ public class ProxyServlet implements Servlet {
         AuthenticationContext.enter();
         InvocationResponse invocationResponse = null;
         Method method = null;
+        Object result = null;
         try {
             invocationResponse = new InvocationResponse();
 
@@ -167,8 +167,8 @@ public class ProxyServlet implements Servlet {
             Object[] proxiedParameters = serviceWrapper.getModificationManager().applyModificationScheme(invocationRequest.getParameters());
             method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
 
-            Serializable result = (Serializable) method.invoke(serviceWrapper.getService(), proxiedParameters);
-            invocationResponse.setResult(result);
+            result = (Serializable) method.invoke(serviceWrapper.getService(), proxiedParameters);
+            invocationResponse.setResult((Serializable) result);
             invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
 
         } catch (Exception e) {
@@ -186,7 +186,21 @@ public class ProxyServlet implements Servlet {
             }
         } finally {
             AuthenticationContext.exit();
-            new ObjectOutputStream(response.getOutputStream()).writeObject(invocationResponse);
+            if (result != null && result instanceof InputStream) {
+                streamResultToResponse(result, response);
+            } else {
+                new ObjectOutputStream(response.getOutputStream()).writeObject(invocationResponse);
+            }
+        }
+    }
+
+    private void streamResultToResponse(Object result, ServletResponse response) throws IOException {
+        InputStream in = (InputStream) result;
+        OutputStream out = response.getOutputStream();
+        byte[] buf = new byte[getStreamBufferSize()];
+        int len;
+        while ((len = in.read(buf)) != -1) {
+            out.write(buf, 0, len);
         }
     }
 
@@ -231,5 +245,9 @@ public class ProxyServlet implements Servlet {
 
     public ServletConfig getServletConfig() {
         return servletConfig;
+    }
+
+    public Integer getStreamBufferSize() {
+        return DEFAULT_STREAM_BUFFER_SIZE;
     }
 }
