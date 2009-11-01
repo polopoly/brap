@@ -5,10 +5,7 @@ import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.common.ModificationList;
 import no.tornado.brap.exception.RemotingException;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -71,7 +68,7 @@ public class MethodInvocationHandler implements InvocationHandler {
      * @return Object the result of the method invocation
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
-        InvocationResponse response;
+        InvocationResponse response = null;
 
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
@@ -82,15 +79,18 @@ public class MethodInvocationHandler implements InvocationHandler {
             ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
             out.writeObject(request);
 
-            ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
-            response = (InvocationResponse) in.readObject();
-
-            applyModifications(args, response.getModifications());
+            if (method.getReturnType().isAssignableFrom(InputStream.class)) {
+                return conn.getInputStream();     
+            } else {
+                ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
+                response = (InvocationResponse) in.readObject();
+                applyModifications(args, response.getModifications());
+            }
         } catch (IOException e) {
             throw new RemotingException(e);
         }
 
-        if (response.getException() != null)
+        if (response != null && response.getException() != null)
             throw response.getException();
 
         return response.getResult();
