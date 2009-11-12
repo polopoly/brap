@@ -14,6 +14,9 @@ public class UsernamePasswordPrincipal implements Serializable {
     private String username;
     private String password;
 
+    public UsernamePasswordPrincipal() {
+    }
+
     public UsernamePasswordPrincipal(String username, String password) {
         this.username = username;
         this.password = password;
