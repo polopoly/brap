@@ -2,7 +2,7 @@ package no.tornado.brap.examples.service;
 
 import no.tornado.brap.auth.AnonymousPrincipal;
 import no.tornado.brap.auth.AuthenticationContext;
-import no.tornado.brap.auth.UsernamePasswordPrincipal;
+import no.tornado.brap.common.UsernamePasswordPrincipal;
 
 import java.io.Serializable;
 

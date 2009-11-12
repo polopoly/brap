@@ -17,7 +17,7 @@ import no.tornado.brap.exception.AuthorizationFailedException;
  * @see AuthenticationRequiredAuthorizer
  * @see AuthenticationContext
  * @see no.tornado.brap.auth.AnonymousPrincipal
- * @see no.tornado.brap.auth.UsernamePasswordPrincipal
+ * @see no.tornado.brap.common.UsernamePasswordPrincipal
  * @see no.tornado.brap.servlet.ServiceWrapper
  */
 public interface AuthorizationProvider {
