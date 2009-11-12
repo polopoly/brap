@@ -1,4 +1,4 @@
-package no.tornado.brap.auth;
+package no.tornado.brap.common;
 
 import java.io.Serializable;
 
@@ -7,8 +7,7 @@ import java.io.Serializable;
  * You are welcome to write your own principal, or just use your
  * existing domain object for authentication!
  *
- * @see no.tornado.brap.auth.AuthenticationProvider
- * @see no.tornado.brap.auth.UsernamePasswordPrincipal
+ * @see UsernamePasswordPrincipal
  */
 public class UsernamePasswordPrincipal implements Serializable {
     private String username;

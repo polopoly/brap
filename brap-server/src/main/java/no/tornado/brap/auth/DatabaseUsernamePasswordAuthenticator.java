@@ -1,6 +1,7 @@
 package no.tornado.brap.auth;
 
 import no.tornado.brap.common.InvocationRequest;
+import no.tornado.brap.common.UsernamePasswordPrincipal;
 import no.tornado.brap.exception.AuthenticationFailedException;
 
 import javax.sql.DataSource;

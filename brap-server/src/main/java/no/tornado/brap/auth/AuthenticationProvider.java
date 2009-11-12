@@ -16,7 +16,7 @@ import no.tornado.brap.exception.AuthenticationFailedException;
  * @see no.tornado.brap.auth.SingleUsernamePasswordAuthenticator
  * @see no.tornado.brap.auth.DatabaseUsernamePasswordAuthenticator
  * @see no.tornado.brap.auth.AnonymousPrincipal
- * @see no.tornado.brap.auth.UsernamePasswordPrincipal
+ * @see no.tornado.brap.common.UsernamePasswordPrincipal
  */
 public interface AuthenticationProvider {
     /**
@@ -32,7 +32,7 @@ public interface AuthenticationProvider {
      * @see no.tornado.brap.servlet.ProxyServlet
      * @see no.tornado.brap.auth.AuthorizationProvider
      * @see AuthenticationContext
-     * @see no.tornado.brap.auth.UsernamePasswordPrincipal
+     * @see no.tornado.brap.common.UsernamePasswordPrincipal
      * @see no.tornado.brap.auth.DatabaseUsernamePasswordAuthenticator
      */
     void authenticate(InvocationRequest invocationRequest) throws AuthenticationFailedException;

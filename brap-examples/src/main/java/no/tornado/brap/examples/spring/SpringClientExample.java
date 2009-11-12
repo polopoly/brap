@@ -2,8 +2,7 @@ package no.tornado.brap.examples.spring;
 
 import no.tornado.brap.client.ServiceProxyFactory;
 import no.tornado.brap.examples.service.HelloService;
-import no.tornado.brap.examples.service.MyService;
-import no.tornado.brap.auth.UsernamePasswordPrincipal;
+import no.tornado.brap.common.UsernamePasswordPrincipal;
 
 public class SpringClientExample {
     public static void main(String[] args) {
