@@ -167,7 +167,7 @@ public class ProxyServlet implements Servlet {
             Object[] proxiedParameters = serviceWrapper.getModificationManager().applyModificationScheme(invocationRequest.getParameters());
             method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
 
-            result = (Serializable) method.invoke(serviceWrapper.getService(), proxiedParameters);
+            result = method.invoke(serviceWrapper.getService(), proxiedParameters);
             invocationResponse.setResult((Serializable) result);
             invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
 
