@@ -169,7 +169,7 @@ public class ProxyServlet implements Servlet {
             method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
 
             // If the first argument was an input-stream, reroute it from the request inputStream
-            if (invocationRequest.getParameters().length > 0 && InputStreamArgumentPlaceholder.class.equals(invocationRequest.getParameters()[0].getClass()))
+            if (invocationRequest.getParameters() != null && invocationRequest.getParameters().length > 0 && InputStreamArgumentPlaceholder.class.equals(invocationRequest.getParameters()[0].getClass()))
                 proxiedParameters[0] = request.getInputStream();
 
             result = method.invoke(serviceWrapper.getService(), proxiedParameters);
