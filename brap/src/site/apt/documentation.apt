@@ -326,6 +326,10 @@ public class HelloServiceImpl implements HelloService {
   can subclass the SetterModificationManager and override the <depth> and <proxyClassDefinition>
   getters.
 
+* Remoting with Streams
+  
+  There is a separate page that describes {{{remoting-with-streams.html}remoting with streams}} and some gotchas.
+  
 * More information
 
   Please check out the <brap-examples> project for more information and code samples.
