@@ -1,0 +1,23 @@
+                  ------
+               Remoting with Streams
+                  ------
+
+To recieve data as an InputStream from the remoting service, all you need to do is
+make sure the remoting service returns an InputStream or any superclass.
+
++--
+    InputStream result = myService.methodThatReturnsInputStream();
++--
+
+To send data to a remoting service, the first method argument must be the stream you
+want the remoting service to consume:
+
++--
+    myService.methodThatConsumesInputStream(myInputStream, someOtherArgument);
++--
+
+    * Gotchas when using streams
+
+    When you invoke a remoting service that returns a stream, the ModificationManager will not
+    kick in, rendering "pass-by-reference" update of remote method arguments nonfunctional.
+    

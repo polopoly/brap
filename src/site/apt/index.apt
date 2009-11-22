@@ -6,11 +6,14 @@ Binary Remoting and Authentication Protocol
 
   BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
 
-  It aims to be an alternative to
+  It aims to be a lightweight alternative to
   {{{http://static.springsource.org/spring/docs/2.5.x/reference/remoting.html#remoting-httpinvoker}Spring HttpInvoker}}
   and {{{http://static.springsource.org/spring-security/site/}Spring Security}}
   especially when you don't need or want the dependencies of Spring in your client, for example when
   building a rich client application where size might be an issue.
+
+  BRAP supports {{{remoting-with-streams.html}remoting with streams}} to send and recieve large payloads, and you
+  can easily add progress indicators and cancel/resume behaviour to such transfers.
 
   The authentication mechanism lets you use your own domain objects as credentials.
 
