@@ -1,6 +1,7 @@
 package no.tornado.brap.servlet;
 
 import no.tornado.brap.auth.*;
+import no.tornado.brap.common.InputStreamArgumentPlaceholder;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.exception.RemotingException;
@@ -166,6 +167,10 @@ public class ProxyServlet implements Servlet {
             serviceWrapper.getAuthorizationProvider().authorize(invocationRequest);
             Object[] proxiedParameters = serviceWrapper.getModificationManager().applyModificationScheme(invocationRequest.getParameters());
             method = getMethod(invocationRequest.getMethodName(), invocationRequest.getParameterTypes());
+
+            // If the first argument was an input-stream, reroute it from the request inputStream
+            if (invocationRequest.getParameters().length > 0 && InputStreamArgumentPlaceholder.class.equals(invocationRequest.getParameters()[0].getClass()))
+                proxiedParameters[0] = request.getInputStream();
 
             result = method.invoke(serviceWrapper.getService(), proxiedParameters);
             invocationResponse.setResult((Serializable) result);

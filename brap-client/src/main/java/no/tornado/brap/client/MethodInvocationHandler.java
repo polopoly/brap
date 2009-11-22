@@ -3,6 +3,7 @@ package no.tornado.brap.client;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.common.ModificationList;
+import no.tornado.brap.common.InputStreamArgumentPlaceholder;
 import no.tornado.brap.exception.RemotingException;
 
 import java.io.*;
@@ -76,16 +77,28 @@ public class MethodInvocationHandler implements InvocationHandler {
             URLConnection conn = new URL(getServiceURI()).openConnection();
             conn.setDoOutput(true);
 
+            InputStream streamArgument = null;
+            // If first argument is an input stream, remove the argument data from the argument array
+            // and prepare to transfer the data via the connection outputstream after serializing
+            // the invocation request
+            if (args.length > 0 && args[0] != null && InputStream.class.isAssignableFrom(args[0].getClass())) {
+                streamArgument = (InputStream) args[0];
+                args[0] = new InputStreamArgumentPlaceholder();
+            }
+
             ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
             out.writeObject(request);
 
-            if (method.getReturnType().isAssignableFrom(InputStream.class)) {
+            if (streamArgument != null)
+                sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
+
+            if (method.getReturnType().isAssignableFrom(InputStream.class))
                 return conn.getInputStream();     
-            } else {
-                ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
-                response = (InvocationResponse) in.readObject();
-                applyModifications(args, response.getModifications());
-            }
+
+            ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
+            response = (InvocationResponse) in.readObject();
+            applyModifications(args, response.getModifications());
+
         } catch (IOException e) {
             throw new RemotingException(e);
         }
@@ -94,6 +107,13 @@ public class MethodInvocationHandler implements InvocationHandler {
             throw response.getException();
 
         return response.getResult();
+    }
+
+    private void sendStreamArgumentToHttpOutputStream(InputStream streamArgument, OutputStream outputStream) throws IOException {
+        byte[] buf = new byte[ServiceProxyFactory.streamBufferSize];
+        int len;
+        while ((len = streamArgument.read(buf)) > -1)
+            outputStream.write(buf, 0, len);
     }
 
     private void applyModifications(Object[] args, ModificationList[] modifications) {
