@@ -81,7 +81,7 @@ public class MethodInvocationHandler implements InvocationHandler {
             // If first argument is an input stream, remove the argument data from the argument array
             // and prepare to transfer the data via the connection outputstream after serializing
             // the invocation request
-            if (args.length > 0 && args[0] != null && InputStream.class.isAssignableFrom(args[0].getClass())) {
+            if (args != null && args.length > 0 && args[0] != null && InputStream.class.isAssignableFrom(args[0].getClass())) {
                 streamArgument = (InputStream) args[0];
                 args[0] = new InputStreamArgumentPlaceholder();
             }
