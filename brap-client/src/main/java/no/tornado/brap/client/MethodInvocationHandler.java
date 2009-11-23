@@ -77,13 +77,17 @@ public class MethodInvocationHandler implements InvocationHandler {
             URLConnection conn = new URL(getServiceURI()).openConnection();
             conn.setDoOutput(true);
 
+            // Look for the first argument that is an input stream, remove the argument data from the argument array
+            // and prepare to transfer the data via the connection outputstream after serializing the invocation request.
             InputStream streamArgument = null;
-            // If first argument is an input stream, remove the argument data from the argument array
-            // and prepare to transfer the data via the connection outputstream after serializing
-            // the invocation request
-            if (args != null && args.length > 0 && args[0] != null && InputStream.class.isAssignableFrom(args[0].getClass())) {
-                streamArgument = (InputStream) args[0];
-                args[0] = new InputStreamArgumentPlaceholder();
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] != null && InputStream.class.isAssignableFrom(args[i].getClass())) {
+                        streamArgument = (InputStream) args[i];
+                        args[i] = new InputStreamArgumentPlaceholder();
+                        break;
+                    }
+                }
             }
 
             ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());

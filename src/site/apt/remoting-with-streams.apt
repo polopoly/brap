@@ -9,15 +9,17 @@ make sure the remoting service returns an InputStream or any superclass.
     InputStream result = myService.methodThatReturnsInputStream();
 +--
 
-To send data to a remoting service, the first method argument must be the stream you
-want the remoting service to consume:
+To send data to a remoting service, supply an argument of type or superclass InputStream.
 
 +--
-    myService.methodThatConsumesInputStream(myInputStream, someOtherArgument);
+    myService.methodThatConsumesInputStream(myInputStream, otherArguments...);
 +--
 
     * Gotchas when using streams
 
     When you invoke a remoting service that returns a stream, the ModificationManager will not
     kick in, rendering "pass-by-reference" update of remote method arguments nonfunctional.
+
+    Only the first argument that is an InputStream will be remoted. If you supply more than one
+    InputStream argument, you will recieve an <NotSerializableException>.
     
