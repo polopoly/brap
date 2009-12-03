@@ -10,7 +10,6 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
@@ -72,7 +71,7 @@ public class MethodInvocationHandler implements InvocationHandler {
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
         InvocationResponse response = null;
-
+        
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
