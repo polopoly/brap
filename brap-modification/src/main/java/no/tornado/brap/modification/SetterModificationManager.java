@@ -35,6 +35,7 @@ public class SetterModificationManager implements ModificationManager {
     }
 
     public Object[] applyModificationScheme(Object[] objects) {
+        if (objects == null) return null;
         modifications = new ModificationList[objects.length];
         Object[] proxiedObjects = new Object[objects.length];
 
