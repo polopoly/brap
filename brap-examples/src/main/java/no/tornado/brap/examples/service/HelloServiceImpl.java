@@ -4,7 +4,7 @@ import no.tornado.brap.auth.AnonymousPrincipal;
 import no.tornado.brap.auth.AuthenticationContext;
 import no.tornado.brap.common.UsernamePasswordPrincipal;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class HelloServiceImpl implements HelloService {
     public String sayHello(String name) {
@@ -19,5 +19,16 @@ public class HelloServiceImpl implements HelloService {
         }
 
 
+    }
+
+    public void sendLargeStream(InputStream in) throws IOException {
+        FileOutputStream out = new FileOutputStream(System.getProperty("user.home") + File.separator + "in.stream");
+        byte[] buf = new byte[16384];
+        int len;
+        while ((len = in.read(buf)) != -1) {
+            out.write(buf, 0, len);
+        }
+        out.close();
+        in.close();
     }
 }

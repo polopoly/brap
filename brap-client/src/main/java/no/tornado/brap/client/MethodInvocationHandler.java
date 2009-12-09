@@ -10,9 +10,8 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -75,7 +74,7 @@ public class MethodInvocationHandler implements InvocationHandler {
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
-            URLConnection conn = new URL(getServiceURI()).openConnection();
+            HttpURLConnection conn = (HttpURLConnection) new URL(getServiceURI()).openConnection();
             conn.setDoOutput(true);
 
             // Look for the first argument that is an input stream, remove the argument data from the argument array
@@ -91,8 +90,12 @@ public class MethodInvocationHandler implements InvocationHandler {
                 }
             }
 
+            if (streamArgument != null)
+                conn.setChunkedStreamingMode(ServiceProxyFactory.streamBufferSize);
+
             ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
             out.writeObject(request);
+            out.flush();
 
             if (streamArgument != null)
                 sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
@@ -126,18 +129,12 @@ public class MethodInvocationHandler implements InvocationHandler {
             for (int i = 0; i < modifications.length; i++) {
                 ModificationList mods = modifications[i];
                 if (mods != null) {
-                    Iterator<Map.Entry<String, Object>> it = mods.getModifiedProperties().entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry<String, Object> entry = it.next();
+                    for (Map.Entry<String, Object> entry : mods.getModifiedProperties().entrySet()) {
                         try {
                             setModifiedValue(entry.getKey(), entry.getValue(), args[i]);
-                        } catch (NoSuchFieldException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                        } catch (Exception ignored) {
                         }
                     }
-
                 }
             }
         }
