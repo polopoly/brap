@@ -13,7 +13,7 @@ public class SpringClientExample {
         HelloService service = ServiceProxyFactory.createProxy(HelloService.class, "http://localhost:8080/remoting/hello", upp);
         System.out.println(service.sayHello("Hello"));
 
-        FileInputStream in = new FileInputStream("/Users/edvin/Movies/Video0001.3gp");
+        FileInputStream in = new FileInputStream("/Users/edvin/Movies/The.Dark.Knight.2008.1080p.BluRay.x264-CiNEFiLE.mkv");
         service.sendLargeStream(in);
     }
 }
