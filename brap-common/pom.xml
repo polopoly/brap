@@ -5,13 +5,13 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-common</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9-SNAPSHOT</version>
+    <version>${brap.version}</version>
     <name>BRAP Common</name>
     <description>Library and tools used for BRAP client and server.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9-SNAPSHOT</version>
+        <version>${brap.version}</version>
     </parent>
     <build>
         <plugins>
@@ -51,4 +51,7 @@
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

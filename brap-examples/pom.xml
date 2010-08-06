@@ -5,39 +5,45 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-examples</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9-SNAPSHOT</version>
+    <version>${brap.version}</version>
     <name>BRAP Examples</name>
     <description>Examples for BRAP client and server usage, including BRAP-Spring.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9-SNAPSHOT</version>
+        <version>${brap.version}</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>${project.version}</version>
+            <version>${brap.version}</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-server</artifactId>
-            <version>${project.version}</version>
+            <version>${brap.version}</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-client</artifactId>
-            <version>${project.version}</version>
+            <version>${brap.version}</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-spring</artifactId>
-            <version>${project.version}</version>
+            <version>${brap.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty</artifactId>
-            <version>6.1.17</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>7.0.2.v20100331</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>7.0.2.v20100331</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -79,4 +85,7 @@
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

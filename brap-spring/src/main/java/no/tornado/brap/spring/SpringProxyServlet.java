@@ -1,11 +1,10 @@
 package no.tornado.brap.spring;
 
-import no.tornado.brap.servlet.ProxyServlet;
-import no.tornado.brap.servlet.ServiceWrapper;
-import no.tornado.brap.modification.ModificationManager;
-import no.tornado.brap.modification.ChangesIgnoredModificationManager;
 import no.tornado.brap.auth.AuthenticationNotRequiredAuthenticator;
 import no.tornado.brap.auth.AuthenticationRequiredAuthorizer;
+import no.tornado.brap.modification.ChangesIgnoredModificationManager;
+import no.tornado.brap.servlet.ProxyServlet;
+import no.tornado.brap.servlet.ServiceWrapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -53,7 +52,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  */
 public class SpringProxyServlet extends ProxyServlet {
-    private ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
 
     public void createServiceWrapper() {
         applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletConfig.getServletContext());

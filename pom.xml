@@ -5,7 +5,7 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap</artifactId>
     <packaging>pom</packaging>
-    <version>0.9-SNAPSHOT</version>
+    <version>${brap.version}</version>
     <url>http://brap.tornado.no/</url>
     <name>BRAP</name>
     <modules>
@@ -133,4 +133,8 @@
             </plugin>
         </plugins>
     </reporting>
+    <properties>
+        <brap.version>0.9.3</brap.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

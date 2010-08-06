@@ -178,6 +178,7 @@ public class ProxyServlet implements Servlet {
                 }
             }
 
+            preMethodInvocation();
             result = method.invoke(serviceWrapper.getService(), proxiedParameters);
             invocationResponse.setResult((Serializable) result);
             invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
@@ -197,12 +198,28 @@ public class ProxyServlet implements Servlet {
             }
         } finally {
             AuthenticationContext.exit();
+            postMethodInvocation();
             if (result != null && result instanceof InputStream) {
                 streamResultToResponse(result, response);
             } else {
                 new ObjectOutputStream(response.getOutputStream()).writeObject(invocationResponse);
             }
         }
+    }
+
+    /**
+     * Overidde to do custom work after invocing a method on your service.
+     */
+    protected void postMethodInvocation() {
+    }
+
+
+    /**
+     * Override to do custom work before invocting a method on your service,
+     * for example setting a thread local value etc.
+     */
+    protected void preMethodInvocation() {
+
     }
 
     private void streamResultToResponse(Object result, ServletResponse response) throws IOException {
