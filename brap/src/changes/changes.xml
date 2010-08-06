@@ -23,5 +23,10 @@
                 Support for generics on the client
             </action>
         </release>
+        <release version="0.9.3" date="2010-07-06" description="">
+            <action dev="Edvin Syse" type="add">
+                ProxyServlet pre/post service method invocation hooks, examples now use Jetty 7.
+            </action>
+        </release>
     </body>
 </document>

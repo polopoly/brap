@@ -190,7 +190,7 @@ public class HelloServiceImpl implements HelloService {
         return "Hello " + name + ", you are authenticated as " + upp.getUsername();
       } else {
         return "Hello there, " + name + ", you are authenticated with a " + AuthenticationContext.getPrincipal() +
-        ", which I don't know how anything about.";
+        ", which I don't know anything about.";
       }
     }
 }
