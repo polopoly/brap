@@ -134,7 +134,7 @@
         </plugins>
     </reporting>
     <properties>
-        <brap.version>0.9.3</brap.version>
+        <brap.version>0.9-SNAPSHOT</brap.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>
