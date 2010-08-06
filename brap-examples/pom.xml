@@ -5,34 +5,34 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-examples</artifactId>
     <packaging>bundle</packaging>
-    <version>${brap.version}</version>
+    <version>0.9.3</version>
     <name>BRAP Examples</name>
     <description>Examples for BRAP client and server usage, including BRAP-Spring.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>${brap.version}</version>
+        <version>0.9.3</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>${brap.version}</version>
+            <version>0.9.3</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-server</artifactId>
-            <version>${brap.version}</version>
+            <version>0.9.3</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-client</artifactId>
-            <version>${brap.version}</version>
+            <version>0.9.3</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-spring</artifactId>
-            <version>${brap.version}</version>
+            <version>0.9.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
