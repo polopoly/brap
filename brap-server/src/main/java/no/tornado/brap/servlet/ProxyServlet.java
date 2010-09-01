@@ -202,7 +202,18 @@ public class ProxyServlet implements Servlet {
             if (result != null && result instanceof InputStream) {
                 streamResultToResponse(result, response);
             } else {
-                new ObjectOutputStream(response.getOutputStream()).writeObject(invocationResponse);
+                try {
+                    ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
+                    out.writeObject(invocationResponse);
+                    out.close();
+                } catch (Exception e) {
+                    InvocationResponse reporter = new InvocationResponse();
+                    reporter.setException(new RuntimeException(e.getClass() + " error while writing result: " + e.getMessage()));
+
+                    ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
+                    out.writeObject(reporter);
+                    out.close();
+                }
             }
         }
     }
