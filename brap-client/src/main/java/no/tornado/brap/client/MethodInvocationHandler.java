@@ -22,7 +22,7 @@ import java.util.Map;
  * The recommended way to retrieve a service proxy is to call one of the static methods
  * in the <code>ServiceProxyFactory</code>.
  */
-public class MethodInvocationHandler implements InvocationHandler {
+public class MethodInvocationHandler implements InvocationHandler, Serializable {
     private String serviceURI;
     private Serializable credentials;
     private static final String REGEXP_PROPERTY_DELIMITER = "\\.";
