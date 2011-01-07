@@ -156,12 +156,12 @@ public class ProxyServlet implements Servlet {
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
         AuthenticationContext.enter();
         InvocationResponse invocationResponse = null;
+        InvocationRequest invocationRequest = null;
         Method method = null;
         Object result = null;
         try {
             invocationResponse = new InvocationResponse();
-
-            InvocationRequest invocationRequest = (InvocationRequest) new ObjectInputStream(request.getInputStream()).readObject();
+            invocationRequest = (InvocationRequest) new ObjectInputStream(request.getInputStream()).readObject();
 
             serviceWrapper.getAuthenticationProvider().authenticate(invocationRequest);
             serviceWrapper.getAuthorizationProvider().authorize(invocationRequest);
@@ -203,9 +203,13 @@ public class ProxyServlet implements Servlet {
                 streamResultToResponse(result, response);
             } else {
                 try {
-                    ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
-                    out.writeObject(invocationResponse);
-                    out.close();
+                    if (invocationRequest != null) {
+                        ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
+                        out.writeObject(invocationResponse);
+                        out.close();
+                    } else {
+                        respondWithInterfaceDeclaration(response);
+                    }
                 } catch (Exception e) {
                     InvocationResponse reporter = new InvocationResponse();
                     reporter.setException(new RuntimeException(e.getClass() + " error while writing result: " + e.getMessage()));
@@ -216,6 +220,41 @@ public class ProxyServlet implements Servlet {
                 }
             }
         }
+    }
+
+    /**
+     * No invocationRequest was available, assume request by something else than BRAP Client.
+     * Return HTML describing the service interface
+     * @param response
+     */
+    private void respondWithInterfaceDeclaration(ServletResponse response) throws IOException {
+        StringBuilder s = new StringBuilder();
+        s.append("<style type=\"text/css\">");
+        s.append("table { width: 100%; border-collapse: collapse; border: 1px solid #ccc; }");
+        s.append("td, th { padding: 5px; } ");
+        s.append("td { border: 1px solid #ccc; margin: 0; }");
+        s.append("th { text-align: left; background-color: #cce; }");
+        s.append("td.returnType { text-align: right; }");
+        s.append("</style>");
+        s.append("<h1>" + serviceWrapper.getService().getClass().getSimpleName() + "</h1>");
+        s.append("<table><tr><th colspan=\"2\">Method Summary</th></tr>");
+        for (Method method : serviceWrapper.getService().getClass().getDeclaredMethods()) {
+            s.append("<tr><td class=\"returnType\">" + method.getReturnType().getSimpleName() + "</td><td class=\"method\">");
+            s.append("<strong>" + method.getName() + "</strong>(");
+            Class[] params = method.getParameterTypes();
+            if (params != null && params.length > 0) {
+                for (int i = 0; i < params.length; i++) {
+                    if (i > 0)
+                        s.append(", ");
+                    s.append(params[i].getSimpleName() + " arg" + i);
+                }
+            }
+            s.append(")</td></tr>");
+        }
+        s.append("</table>");
+        OutputStream out = response.getOutputStream();
+        out.write(s.toString().getBytes());
+        out.close();
     }
 
     /**
