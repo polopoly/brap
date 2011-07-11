@@ -41,8 +41,8 @@
 		<url>https://www.syse.no/</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://brap.subversion.no/tags/brap-1.0</connection>
-		<developerConnection>scm:svn:https://brap.subversion.no/tags/brap-1.0</developerConnection>
+		<connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
+		<developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
 	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
