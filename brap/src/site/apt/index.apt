@@ -67,21 +67,21 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-client</artifactId>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
 </dependency>
 
 <!-- Server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-server</artifactId>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
 </dependency>
 
 <!-- Optional Spring support on the server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-spring</artifactId>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
 </dependency>
 +--
 

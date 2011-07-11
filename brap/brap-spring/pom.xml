@@ -5,24 +5,24 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-spring</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
     <name>BRAP Spring</name>
     <description>Spring Support Library for BRAP-Server. Expose Spring Beans with BRAP.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9.3</version>
+        <version>0.9.4</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-server</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>2.5.6</version>
+            <version>3.0.5.RELEASE</version>
         </dependency>
     </dependencies>
     <build>

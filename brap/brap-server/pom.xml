@@ -5,24 +5,24 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-server</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
     <name>BRAP Server</name>
     <description>Server Library for exposing remoting services with BRAP.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9.3</version>
+        <version>0.9.4</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
+            <version>2.5</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
