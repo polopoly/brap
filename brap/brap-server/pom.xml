@@ -4,19 +4,19 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-server</artifactId>
     <packaging>bundle</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>BRAP Server</name>
     <description>Server Library for exposing remoting services with BRAP.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
