@@ -4,13 +4,13 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-common</artifactId>
     <packaging>bundle</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>BRAP Common</name>
     <description>Library and tools used for BRAP client and server.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <build>
         <plugins>
