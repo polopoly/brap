@@ -4,7 +4,7 @@
 	<groupId>no.tornado.brap</groupId>
 	<artifactId>brap</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<url>http://brap.tornado.no/</url>
 	<name>BRAP</name>
 	<modules>
@@ -41,9 +41,10 @@
 		<url>https://www.syse.no/</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://brap.subversion.no/brap/tags/brap-1.0</connection>
-		<developerConnection>scm:svn:https://brap.subversion.no/brap/tags/brap-1.0</developerConnection>
-	</scm>
+		<connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
+		<developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
+	  <url>http://svn.sonatype.org/spice/tags/oss-parent-7/brap</url>
+  </scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
