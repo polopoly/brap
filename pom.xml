@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>no.tornado.brap</groupId>
 	<artifactId>brap</artifactId>
 	<packaging>pom</packaging>
-	<version>0.9.4-SNAPSHOT</version>
+	<version>0.9.4</version>
 	<url>http://brap.tornado.no/</url>
 	<name>BRAP</name>
 	<modules>
@@ -42,9 +41,9 @@
 		<url>https://www.syse.no/</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://svn.sysedata.no/brap</connection>
-		<developerConnection>scm:svn:https://svn.sysedata.no/brap</developerConnection>
-		<url>http://brap.tornado.no/viewvc</url>
+		<connection>scm:svn:https://svn.sysedata.no/brap/tags/brap-0.9.4</connection>
+		<developerConnection>scm:svn:https://svn.sysedata.no/brap/tags/brap-0.9.4</developerConnection>
+		<url>http://brap.tornado.no/viewvc/tags/brap-0.9.4</url>
 	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
