@@ -41,10 +41,9 @@
 		<url>https://www.syse.no/</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
-		<developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
-    <url>http://svn.sonatype.org/spice/tags/oss-parent-7/brap</url>
-  </scm>
+		<connection>scm:svn:https://brap.subversion.no/trunk/brap</connection>
+		<developerConnection>scm:svn:https://brap.subversion.no/trunk/brap</developerConnection>
+	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
@@ -57,18 +56,6 @@
 			<url>scp://brap.tornado.no//home/brap/webapps/ROOT</url>
 		</site>
 	</distributionManagement>
-	<mailingLists>
-		<mailingList>
-			<name>BRAP Announce</name>
-			<subscribe>http://brap.tornado.no/announce-subscribe.html</subscribe>
-			<unsubscribe>http://brap.tornado.no/announce-subscribe.html</unsubscribe>
-		</mailingList>
-		<mailingList>
-			<name>BRAP Users</name>
-			<subscribe>http://brap.tornado.no/users-subscribe.html</subscribe>
-			<unsubscribe>http://brap.tornado.no/users-subscribe.html</unsubscribe>
-		</mailingList>
-	</mailingLists>
 	<developers>
 		<developer>
 			<name>Edvin Syse</name>

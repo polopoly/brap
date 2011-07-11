@@ -56,7 +56,7 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
   Don't let the simplicity fool you - BRAP supports powerful customization and Spring integration for maximum flexibility!
 
   Read the {{{documentation.html}short and concise documentation}}, the {{{/apidocs/index.html}apidocs}}
-  or browse the {{{source.html}source code}} which is also available in the {{{http://brap.subversion.no/brap}Subversion repository}}.
+  or browse the {{{source.html}source code}}.
 
 * Getting BRAP
 
