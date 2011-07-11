@@ -4,19 +4,19 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-client</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.9.4</version>
     <name>BRAP Client</name>
     <description>Client Library for connecting to a BRAP-exposed remoting service.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9.4-SNAPSHOT</version>
+        <version>0.9.4</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>0.9.4-SNAPSHOT</version>
+            <version>0.9.4</version>
         </dependency>
     </dependencies>
     <build>
