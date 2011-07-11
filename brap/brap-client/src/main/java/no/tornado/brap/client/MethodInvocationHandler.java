@@ -69,7 +69,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * @return Object the result of the method invocation
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
-        InvocationResponse response = null;
+        InvocationResponse response;
         
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
@@ -100,7 +100,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             if (streamArgument != null)
                 sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
 
-            if (method.getReturnType().isAssignableFrom(InputStream.class))
+            if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class))
                 return conn.getInputStream();     
 
             ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
@@ -111,7 +111,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             throw new RemotingException(e);
         }
 
-        if (response != null && response.getException() != null)
+        if (response.getException() != null)
             throw response.getException();
 
         return response.getResult();
