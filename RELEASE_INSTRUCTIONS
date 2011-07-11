@@ -18,7 +18,7 @@ mvn package assembly:assembly -DperformRelease=true
 * Update pom's to SNAPSHOT
 * CI trunk
 
-* PROMOTE RELEASE TO OSS.SONATYPE.ORG:
+* PROMOTE RELEASE TO OSS.SONATYPE.ORG: (Must be SNAPSHOT-versioned first)
 
 * https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
 

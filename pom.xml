@@ -41,8 +41,8 @@
 		<url>https://www.syse.no/</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://svn.sysedata.no/brap/tags/brap-0.9.4</connection>
-		<developerConnection>scm:svn:https://svn.sysedata.no/brap/tags/brap-0.9.4</developerConnection>
+		<connection>scm:svn:https://brap.subversion.no/brap/tags/brap-0.9.4</connection>
+		<developerConnection>scm:svn:https://brap.subversion.no/brap/tags/brap-0.9.4</developerConnection>
 		<url>http://brap.tornado.no/viewvc/tags/brap-0.9.4</url>
 	</scm>
 	<parent>
