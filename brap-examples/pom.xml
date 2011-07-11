@@ -5,44 +5,44 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-examples</artifactId>
     <packaging>bundle</packaging>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
     <name>BRAP Examples</name>
     <description>Examples for BRAP client and server usage, including BRAP-Spring.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>0.9.3</version>
+        <version>0.9.4</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-server</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-client</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-spring</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>7.2.2.v20101205</version>
+            <version>7.4.2.v20110526</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>7.2.2.v20101205</version>
+            <version>7.4.2.v20110526</version>
         </dependency>
     </dependencies>
     <build>
