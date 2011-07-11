@@ -55,18 +55,6 @@ Getting BRAP
 </dependency>
 +--
 
-  Snapshots are available at {{http://brap.tornado.no/maven/snapshots}}. If you want to use a snapshot, add
-  the following to your pom.xml:
-
-+--
-<repositories>
-    <repository>
-        <name>BRAP Snapshots Repository</name>
-        <url>http://brap.tornado.no/maven/snapshots</url>
-    </repository>
-</repositories>
-+--
-
 * Source code
 
   All source code is available online. See the {{{source.html}source}} page for more information.
