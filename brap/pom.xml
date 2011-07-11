@@ -43,8 +43,7 @@
 	<scm>
 		<connection>scm:svn:https://brap.subversion.no/brap</connection>
 		<developerConnection>scm:svn:https://brap.subversion.no/brap</developerConnection>
-	  <url>http://svn.sonatype.org/spice/tags/oss-parent-7/brap</url>
-  </scm>
+	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
