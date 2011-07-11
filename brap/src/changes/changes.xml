@@ -28,12 +28,12 @@
                 ProxyServlet pre/post service method invocation hooks, examples now use Jetty 7.
             </action>
         </release>
-        <release version="0.9.4" date="2011-07-11" description="">
+        <release version="1.0" date="2011-07-11" description="">
             <action dev="Edvin Syse" type="add">
                 Made sure InputStream is not returned when method return type is Object.
             </action>
         </release>
-        <release version="0.9.4" date="2011-07-11" description="">
+        <release version="1.0" date="2011-07-11" description="">
             <action dev="Edvin Syse" type="add">
                 Updated Spring, CGLIB and other optional dependencies to newest version.
             </action>

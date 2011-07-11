@@ -23,7 +23,7 @@ mvn package assembly:assembly -DperformRelease=true
 * https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
 
 mvn release:clean
-mvn release:prepare
+mvn release:prepare -Dusername=edvin -Dpassword=<svn-password>
 mvn release:perform
 
 * Login to oss.sonatype.org with edvin@sysedata.no and promote the release
