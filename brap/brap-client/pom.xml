@@ -14,6 +14,11 @@
     </parent>
     <dependencies>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
             <version>1.1-SNAPSHOT</version>

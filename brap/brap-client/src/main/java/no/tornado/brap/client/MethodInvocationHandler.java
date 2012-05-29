@@ -1,18 +1,32 @@
 package no.tornado.brap.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.SequenceInputStream;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.Map;
+
 import no.tornado.brap.common.InputStreamArgumentPlaceholder;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.common.ModificationList;
 import no.tornado.brap.exception.RemotingException;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
@@ -74,9 +88,11 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
-            HttpURLConnection conn = (HttpURLConnection) new URL(getServiceURI()).openConnection();
-            conn.setDoOutput(true);
+//            HttpURLConnection conn = (HttpURLConnection) new URL(getServiceURI()).openConnection();
+//            conn.setDoOutput(true);
 
+             
+            
             // Look for the first argument that is an input stream, remove the argument data from the argument array
             // and prepare to transfer the data via the connection outputstream after serializing the invocation request.
             InputStream streamArgument = null;
@@ -90,20 +106,44 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                 }
             }
 
-            if (streamArgument != null)
-                conn.setChunkedStreamingMode(ServiceProxyFactory.streamBufferSize);
+           
+//            if (streamArgument != null)
+//                conn.setChunkedStreamingMode(ServiceProxyFactory.streamBufferSize);
+//
+//            ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
+//            out.writeObject(request);
+//            out.flush();
+//
+//            
+//            if (streamArgument != null)
+//                sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
 
-            ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
-            out.writeObject(request);
-            out.flush();
+            
+            
+            
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost post = new HttpPost(new URI(getServiceURI()));
 
-            if (streamArgument != null)
-                sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(request);
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
 
+
+            InputStream is_seq = new SequenceInputStream(ois, streamArgument);
+            
+            
+            HttpEntity entity = new InputStreamEntity(is_seq, 0);
+			post.setEntity(entity);
+            
+			HttpResponse httpresponse = httpclient.execute(post);
+			
+            
             if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class))
-                return conn.getInputStream();     
+                return httpresponse.getEntity().getContent();     
 
-            ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
+            ObjectInputStream in = new ObjectInputStream(httpresponse.getEntity().getContent());
             response = (InvocationResponse) in.readObject();
             applyModifications(args, response.getModifications());
 
@@ -117,12 +157,12 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         return response.getResult();
     }
 
-    private void sendStreamArgumentToHttpOutputStream(InputStream streamArgument, OutputStream outputStream) throws IOException {
-        byte[] buf = new byte[ServiceProxyFactory.streamBufferSize];
-        int len;
-        while ((len = streamArgument.read(buf)) > -1)
-            outputStream.write(buf, 0, len);
-    }
+//    private void sendStreamArgumentToHttpOutputStream(InputStream streamArgument, OutputStream outputStream) throws IOException {
+//        byte[] buf = new byte[ServiceProxyFactory.streamBufferSize];
+//        int len;
+//        while ((len = streamArgument.read(buf)) > -1)
+//            outputStream.write(buf, 0, len);
+//    }
 
     private void applyModifications(Object[] args, ModificationList[] modifications) {
         if (modifications != null) {
