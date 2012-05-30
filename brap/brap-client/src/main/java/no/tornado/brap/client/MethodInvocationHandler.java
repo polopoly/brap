@@ -1,18 +1,30 @@
 package no.tornado.brap.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.SequenceInputStream;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.Map;
+
 import no.tornado.brap.common.InputStreamArgumentPlaceholder;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.common.ModificationList;
 import no.tornado.brap.exception.RemotingException;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
 
 /**
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
@@ -23,15 +35,27 @@ import java.util.Map;
  * in the <code>ServiceProxyFactory</code>.
  */
 public class MethodInvocationHandler implements InvocationHandler, Serializable {
+
+    private static final long serialVersionUID = -4707857501935404577L;
     private String serviceURI;
     private Serializable credentials;
     private static final String REGEXP_PROPERTY_DELIMITER = "\\.";
 
+    private final HttpClient httpClient;
+
     /**
      * Default constructor to use if you override <code>getServiceURI</code>
      * and <code>getCredentials</code> to provide "dynamic" service-uri and credentials.
+     *
+     * @param client The HttpClient that this BRAP client will use
+     *
+     * @throws IllegalArgumentException if the client is null
      */
-    public MethodInvocationHandler() {
+    public MethodInvocationHandler(HttpClient client) {
+        if (client == null) {
+            throw new IllegalArgumentException("HttpClient argument is null!");
+        }
+        httpClient = client;
     }
 
     /**
@@ -40,10 +64,14 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * Credentials can be changed using the ServiceProxyFactory#setCredentials method.
      * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
      *
+     * @param client The HttpClient that this BRAP client will use
      * @param serviceURI  The URI to the remote service
      * @param credentials An object used to authenticate/authorize the request
+     *
+     * @throws IllegalArgumentException if the client is null
      */
-    public MethodInvocationHandler(String serviceURI, Serializable credentials) {
+    public MethodInvocationHandler(HttpClient client, String serviceURI, Serializable credentials) {
+        this(client);
         this.serviceURI = serviceURI;
         this.credentials = credentials;
     }
@@ -53,10 +81,13 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * <p/>
      * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
      *
+     * @param client The HttpClient that this BRAP client will use
      * @param serviceURI The URI to the remote service
+     *
+     * @throws IllegalArgumentException if the client is null
      */
-    public MethodInvocationHandler(String serviceURI) {
-        this(serviceURI, null);
+    public MethodInvocationHandler(HttpClient client, String serviceURI) {
+        this(client, serviceURI, null);
     }
 
     /**
@@ -70,15 +101,13 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
         InvocationResponse response;
-        
+
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
-            HttpURLConnection conn = (HttpURLConnection) new URL(getServiceURI()).openConnection();
-            conn.setDoOutput(true);
-
-            // Look for the first argument that is an input stream, remove the argument data from the argument array
-            // and prepare to transfer the data via the connection outputstream after serializing the invocation request.
+            // Look for the first argument that is an input stream, remove the argument data from
+            // the argument array and prepare to transfer the data via the connection outputstream
+            // after serializing the invocation request.
             InputStream streamArgument = null;
             if (args != null) {
                 for (int i = 0; i < args.length; i++) {
@@ -90,38 +119,45 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                 }
             }
 
-            if (streamArgument != null)
-                conn.setChunkedStreamingMode(ServiceProxyFactory.streamBufferSize);
+            HttpPost post = new HttpPost(new URI(getServiceURI()));
 
-            ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
-            out.writeObject(request);
-            out.flush();
+            // serialize invocation object
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(request);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
 
-            if (streamArgument != null)
-                sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
+            InputStream streamToSend = null;
+            if(streamArgument != null) {
+                // concat streams
+                streamToSend = new SequenceInputStream(ois, streamArgument);
+            } else {
+                streamToSend = ois;
+            }
+            
+            HttpEntity entity = new InputStreamEntity(streamToSend, -1);
+            post.setEntity(entity);
 
-            if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class))
-                return conn.getInputStream();     
+            HttpResponse httpresponse = httpClient.execute(post);
 
-            ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
+            if (!method.getReturnType().equals(Object.class)
+                    && method.getReturnType().isAssignableFrom(InputStream.class)) {
+                return httpresponse.getEntity().getContent();
+            }
+
+            ObjectInputStream in = new ObjectInputStream(httpresponse.getEntity().getContent());
             response = (InvocationResponse) in.readObject();
             applyModifications(args, response.getModifications());
-
         } catch (IOException e) {
             throw new RemotingException(e);
         }
 
-        if (response.getException() != null)
+        if (response.getException() != null) {
             throw response.getException();
+        }
 
         return response.getResult();
-    }
-
-    private void sendStreamArgumentToHttpOutputStream(InputStream streamArgument, OutputStream outputStream) throws IOException {
-        byte[] buf = new byte[ServiceProxyFactory.streamBufferSize];
-        int len;
-        while ((len = streamArgument.read(buf)) > -1)
-            outputStream.write(buf, 0, len);
     }
 
     private void applyModifications(Object[] args, ModificationList[] modifications) {

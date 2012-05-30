@@ -3,6 +3,8 @@ package no.tornado.brap.client;
 import java.io.Serializable;
 import java.lang.reflect.Proxy;
 
+import org.apache.http.client.HttpClient;
+
 /**
  * Factory that creates service proxies for the client.
  *
@@ -37,8 +39,8 @@ public class ServiceProxyFactory {
      * @return A service proxy that implements the given serviceInterface
      *
      */
-    public static <T> T createProxy(Class<? extends T> serviceInterface, String serviceURI) {
-        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(serviceURI));
+    public static <T> T createProxy(Class<? extends T> serviceInterface, HttpClient client, String serviceURI) {
+        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(client, serviceURI));
     }
 
     /**
@@ -52,8 +54,8 @@ public class ServiceProxyFactory {
      * @return A service proxy that implements the given serviceInterface
      *
      */
-    public static <T> T createProxy(Class<? extends T> serviceInterface, String serviceURI, Serializable credentials) {
-        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(serviceURI, credentials));
+    public static <T> T createProxy(Class<? extends T> serviceInterface, HttpClient client, String serviceURI, Serializable credentials) {
+        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(client, serviceURI, credentials));
     }
 
     /**
