@@ -4,7 +4,7 @@
 	<groupId>no.tornado.brap</groupId>
 	<artifactId>brap</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1-polopoly-1.0-SNAPSHOT</version>
+	<version>1.0-polopoly-SNAPSHOT</version>
 	<url>https://github.com/polopoly/brap</url>
 	<name>BRAP</name>
 	<modules>
@@ -14,7 +14,6 @@
 		<module>brap-modification</module>
 		<module>brap-spring</module>
 		<module>brap-examples</module>
-		<module>brap-systemtest</module>
 	</modules>
 	<description>
 		BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
@@ -41,6 +40,26 @@
 		<name>Atex</name>
 		<url>http://www.atex.com/</url>
 	</organization>
+
+	<scm>
+	    <connection>scm:git:git://github.com/polopoly/brap.git</connection>
+	    <developerConnection>scm:git:git@github.com:polopoly/brap.git</developerConnection>
+	</scm>
+
+	<distributionManagement>
+	    <repository>
+	      <id>polopoly-product</id>
+	      <name>Polopoly Product</name>
+	      <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-product</url>
+	    </repository>
+
+	    <snapshotRepository>
+	      <id>polopoly-product-snapshots</id>
+	      <name>Polopoly Product Snapshots</name>
+	      <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-product-snapshots</url>
+	    </snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
