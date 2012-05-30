@@ -4,8 +4,8 @@
 	<groupId>no.tornado.brap</groupId>
 	<artifactId>brap</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1-SNAPSHOT</version>
-	<url>http://brap.tornado.no/</url>
+	<version>1.1-polopoly-1.0-SNAPSHOT</version>
+	<url>https://github.com/polopoly/brap</url>
 	<name>BRAP</name>
 	<modules>
 		<module>brap-common</module>
@@ -28,9 +28,9 @@
 		Server configuration can be expressed solely in web.xml or by subclassing the ProxyServlet but
 		there is also an optional SpringProxyServlet available for seamless Spring Integration.
 
-		BRAP focuses on being easy to use, small in size (9 kb), yet powerful and extensible.
+		BRAP focuses on being easy to use, small in size, yet powerful and extensible.
 	</description>
-	<inceptionYear>2009</inceptionYear>
+	<inceptionYear>2012</inceptionYear>
 	<licenses>
 		<license>
 			<name>Apache License</name>
@@ -38,42 +38,14 @@
 		</license>
 	</licenses>
 	<organization>
-		<name>Syse Data AS</name>
-		<url>https://www.syse.no/</url>
+		<name>Atex</name>
+		<url>http://www.atex.com/</url>
 	</organization>
-	<scm>
-		<connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
-		<developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
-	  <url>http://svn.sonatype.org/spice/tags/oss-parent-7/brap</url>
-  </scm>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-	<distributionManagement>
-		<site>
-			<id>brap</id>
-			<name>BRAP Site</name>
-			<url>scp://brap.tornado.no//home/brap/webapps/ROOT</url>
-		</site>
-	</distributionManagement>
-	<developers>
-		<developer>
-			<name>Edvin Syse</name>
-			<email>edvin@sysedata.no</email>
-			<timezone>2</timezone>
-			<roles>
-				<role>Project Manager</role>
-				<role>Architect</role>
-				<role>Developer</role>
-			</roles>
-		</developer>
-	</developers>
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
@@ -81,11 +53,16 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/assemble/all.xml</descriptor>
 					</descriptors>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.1</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -94,24 +71,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changes-maven-plugin</artifactId>
+				<version>2.8.1</version>
 				<configuration>
-					<smtpHost>smtp.sysedata.no</smtpHost>
-					<smtpPort implementation="java.lang.Integer">25</smtpPort>
-					<toAddresses>
-						<toAddress implementation="java.lang.String">edvin@sysedata.no</toAddress>
-					</toAddresses>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>changes-report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
+		          <aggregate>true</aggregate>
+		        </configuration>
 			</plugin>
 		</plugins>
 	</reporting>

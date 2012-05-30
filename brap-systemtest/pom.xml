@@ -4,39 +4,33 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-systemtest</artifactId>
     <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
     <name>BRAP System test</name>
     <description>Automatic system test for brap</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1-polopoly-1.0-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-server</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-client</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-spring</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>7.4.2.v20110526</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -62,13 +56,6 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-            <!--            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <version>1.4.3</version>
@@ -78,10 +65,10 @@
                         <Export-Package>
                             no.tornado.brap.examples.service, no.tornado.brap.examples.spring 
                         </Export-Package>
-                        <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     </instructions>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
     <properties>
