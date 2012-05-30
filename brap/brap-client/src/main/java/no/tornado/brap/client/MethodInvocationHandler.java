@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -88,9 +87,6 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
-//            HttpURLConnection conn = (HttpURLConnection) new URL(getServiceURI()).openConnection();
-//            conn.setDoOutput(true);
-
              
             
             // Look for the first argument that is an input stream, remove the argument data from the argument array
@@ -107,23 +103,10 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             }
 
            
-//            if (streamArgument != null)
-//                conn.setChunkedStreamingMode(ServiceProxyFactory.streamBufferSize);
-//
-//            ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
-//            out.writeObject(request);
-//            out.flush();
-//
-//            
-//            if (streamArgument != null)
-//                sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
-
-            
-            
-            
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost post = new HttpPost(new URI(getServiceURI()));
 
+            // serialize invocation object
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(request);
@@ -131,14 +114,13 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
 			ObjectInputStream ois = new ObjectInputStream(bais);
 
 
+			// concat streams
             InputStream is_seq = new SequenceInputStream(ois, streamArgument);
             
-            
-            HttpEntity entity = new InputStreamEntity(is_seq, 0);
+            HttpEntity entity = new InputStreamEntity(is_seq, -1);
 			post.setEntity(entity);
             
 			HttpResponse httpresponse = httpclient.execute(post);
-			
             
             if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class))
                 return httpresponse.getEntity().getContent();     
@@ -157,12 +139,6 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         return response.getResult();
     }
 
-//    private void sendStreamArgumentToHttpOutputStream(InputStream streamArgument, OutputStream outputStream) throws IOException {
-//        byte[] buf = new byte[ServiceProxyFactory.streamBufferSize];
-//        int len;
-//        while ((len = streamArgument.read(buf)) > -1)
-//            outputStream.write(buf, 0, len);
-//    }
 
     private void applyModifications(Object[] args, ModificationList[] modifications) {
         if (modifications != null) {
