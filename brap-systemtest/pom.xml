@@ -2,75 +2,65 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.tornado.brap</groupId>
-    <artifactId>brap-systemtest</artifactId>
+    <artifactId>brap-polopoly-systemtest</artifactId>
     <packaging>jar</packaging>
     <name>BRAP System test</name>
     <description>Automatic system test for brap</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
-        <artifactId>brap</artifactId>
-        <version>1.0-polopoly-SNAPSHOT</version>
+        <artifactId>brap-polopoly</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
-            <artifactId>brap-common</artifactId>
+            <artifactId>brap-polopoly-common</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
-            <artifactId>brap-server</artifactId>
+            <artifactId>brap-polopoly-server</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
-            <artifactId>brap-client</artifactId>
+            <artifactId>brap-polopoly-client</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.tornado.brap</groupId>
-            <artifactId>brap-spring</artifactId>
+            <artifactId>brap-polopoly-spring</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>7.4.2.v20110526</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>7.4.2.v20110526</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.4.3</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Export-Package>
-                            no.tornado.brap.examples.service, no.tornado.brap.examples.spring 
-                        </Export-Package>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

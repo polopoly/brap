@@ -2,20 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.tornado.brap</groupId>
-    <artifactId>brap-modification</artifactId>
+    <artifactId>brap-polopoly-modification</artifactId>
     <name>BRAP Modification</name>
     <description>Server addon that emulates "pass-by-reference" for method arguments, so that
         changes applied on the server is visible on the client after the method invocation returns.
     </description>
     <parent>
         <groupId>no.tornado.brap</groupId>
-        <artifactId>brap</artifactId>
-        <version>1.0-polopoly-SNAPSHOT</version>
+        <artifactId>brap-polopoly</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
-            <artifactId>brap-server</artifactId>
+            <artifactId>brap-polopoly-server</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

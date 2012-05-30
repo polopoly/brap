@@ -30,7 +30,7 @@ public class SystemTest {
 
     @Before
     public void setUp() throws Exception {
-        server = new Server(8080);
+        server = new Server(15291);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
@@ -50,14 +50,14 @@ public class SystemTest {
     @Test
     public void runOnce() throws Exception {
         HttpClient client = new DefaultHttpClient();
-        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
         runServices(service);
     }
 
     @Test
     public void runManyTimes() throws Exception {
         HttpClient client = new DefaultHttpClient();
-        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
         for (int i = 0; i < 1000; i++)
             runServices(service);
     }
@@ -70,7 +70,7 @@ public class SystemTest {
 //    public void runyTimes() throws Exception {
 //        ThreadSafeClientConnManager conman = new ThreadSafeClientConnManager();
 //        HttpClient client = new DefaultHttpClient(conman);
-//        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+//        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
 //        while(true)
 //            runServices(service);
 //    }
@@ -80,8 +80,8 @@ public class SystemTest {
     @Test
     public void runMultiServiceOnSameClient() throws Exception {
         HttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager());
-        final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
-        final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+        final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
+        final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
 
         Thread t1 = new Thread(new Runnable() {
             public void run() {

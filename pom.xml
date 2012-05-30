@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>no.tornado.brap</groupId>
-	<artifactId>brap</artifactId>
+	<artifactId>brap-polopoly</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0-polopoly-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<url>https://github.com/polopoly/brap</url>
 	<name>BRAP</name>
 	<modules>
@@ -14,6 +14,7 @@
 		<module>brap-modification</module>
 		<module>brap-spring</module>
 		<module>brap-examples</module>
+		<module>brap-systemtest</module>
 	</modules>
 	<description>
 		BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
