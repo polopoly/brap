@@ -16,11 +16,12 @@ public class TestServiceImpl implements TestService {
     }
 
     public void setString(String input) {
-        System.out.println("got" + input);
+        if (!"hej".equals(input))
+            throw new RuntimeException("expected hej as input");
     }
 
     public String echo(String input) {
-        return input.toUpperCase()+input+input.toLowerCase();
+        return input.toUpperCase() + input + input.toLowerCase();
     }
 
     public InputStream getStream() {
@@ -31,28 +32,32 @@ public class TestServiceImpl implements TestService {
 
     public void setStream(InputStream is) {
         try {
-            printInputStream(is);
+            if (!"hej".equals(getInputStream(is)))
+                throw new RuntimeException("expected hej");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
-
 
     public void setStreamAndString(InputStream is, String str) {
         try {
-            printInputStream(is);
+            if (!"hej".equals(getInputStream(is)))
+                throw new RuntimeException("expected hej in IS arg");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println(str);
+        if (!"hej".equals(str))
+            throw new RuntimeException("expected hej in string arg");
     }
 
     public void setStringAndStream(String str, InputStream is) {
-        System.out.println(str);
+        if (!"hej".equals(str))
+            throw new RuntimeException("expected hej in string arg");
         try {
-            printInputStream(is);
+            if (!"hej".equals(getInputStream(is)))
+                throw new RuntimeException("expected hej in IS arg");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -60,31 +65,34 @@ public class TestServiceImpl implements TestService {
     }
 
     public void setStringAndStreamAndInt(String str, InputStream is, int i) {
-        System.out.println(str);
+        if (!"hej".equals(str))
+            throw new RuntimeException("expected hej in string arg");
         try {
-            printInputStream(is);
+            if (!"hej".equals(getInputStream(is)))
+                throw new RuntimeException("expected hej in IS arg");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-        System.out.println(i);
+        if(i != 1)
+            throw new RuntimeException("expected 1 as int arg");
     }
 
-    private void printInputStream(InputStream is) throws IOException {
+    private String getInputStream(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
         InputStreamReader reader = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(reader);
         String read = br.readLine();
 
-        while(read != null) {
-            System.out.println(read);
+        while (read != null) {
+            sb.append(read);
             read = br.readLine();
         }
+        return sb.toString();
     }
 
     public void throwException() throws Exception {
         throw new Exception("exception!");
     }
 
-    
 }

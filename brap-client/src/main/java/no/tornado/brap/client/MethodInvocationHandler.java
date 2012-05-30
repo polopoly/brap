@@ -140,6 +140,8 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             post.setEntity(entity);
 
             HttpResponse httpresponse = httpClient.execute(post);
+            
+            post.reset();
 
             if (!method.getReturnType().equals(Object.class)
                     && method.getReturnType().isAssignableFrom(InputStream.class)) {

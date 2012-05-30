@@ -1,13 +1,19 @@
 package no.tornado.brap;
 
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
 import no.tornado.brap.client.ServiceProxyFactory;
 import no.tornado.brap.servlet.ProxyServlet;
 import no.tornado.brap.test.TestService;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -43,34 +49,51 @@ public class SystemTest {
     };
     
     @Test
-    public void testrunOnce() throws Exception {
+    public void runOnce() throws Exception {
         HttpClient client = new DefaultHttpClient();
-//        HttpGet get = new HttpGet("http://localhost:8080");
-//        ResponseHandler<String> handler = new BasicResponseHandler();
-//        
-//        String result = client.execute(get, handler);
-//        
-//        System.out.println(result);
-        
         TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
-        
-        System.out.println(service.echo("hej"));
-        
-        
+        runServices(service);
+    }
+
+    
+    @Test
+    public void runManyTimes() throws Exception {
+        HttpClient client = new DefaultHttpClient();
+        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+        for(int i = 0; i < 1000; i++) 
+            runServices(service);
+    }
+
+
+
+    private void runServices(TestService service) throws IOException, UnsupportedEncodingException {
+        assertEquals("HEJHejhej", service.echo("Hej"));
+        service.doVoid();
+        assertEquals("getStream calling", readInputStream(service.getStream()));
+        service.setStream(new ByteArrayInputStream("hej".getBytes("UTF-8")));
+        service.setStreamAndString(new ByteArrayInputStream("hej".getBytes("UTF-8")), "hej");
+        service.setStringAndStream("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")));
+        service.setStringAndStreamAndInt("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")), 1);
+        try {
+            service.throwException();
+            fail("expected exception");
+        } catch (Exception e) {
+            // expected
+        }
     }
     
+    private String readInputStream(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        
+        InputStreamReader reader = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(reader);
+        String read = br.readLine();
     
-//    class BasicTest extends AbstractHandler {
-//
-//        public void handle(String target, Request baseRequest,
-//                HttpServletRequest request, HttpServletResponse response)
-//                throws IOException, ServletException {
-//            baseRequest.setHandled(true);
-//            response.setContentType("text/html;charset=utf-8");
-//            response.setStatus(HttpServletResponse.SC_OK);
-//            PrintWriter writer = response.getWriter();
-//            writer.write("lol no");
-//            
-//        }
-//    }
+        while(read != null) {
+            sb.append(read);
+            read = br.readLine();
+        }
+        return sb.toString();
+    }
+    
 }
