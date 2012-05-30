@@ -20,7 +20,7 @@ public class TestServiceImpl implements TestService {
     }
 
     public String echo(String input) {
-        return input;
+        return input.toUpperCase()+input+input.toLowerCase();
     }
 
     public InputStream getStream() {
@@ -82,7 +82,7 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-    public void thowException() throws Exception {
+    public void throwException() throws Exception {
         throw new Exception("exception!");
     }
 

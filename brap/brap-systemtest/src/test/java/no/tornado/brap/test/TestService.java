@@ -12,5 +12,5 @@ public interface TestService {
     public void setStreamAndString(InputStream is, String str);
     public void setStringAndStream(String str, InputStream is);
     public void setStringAndStreamAndInt(String str, InputStream is, int i);
-    public void thowException() throws Exception;
+    public void throwException() throws Exception;
 }
