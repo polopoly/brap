@@ -4,9 +4,9 @@
                   
 Source Code for BRAP
 
-  You can browse the subversion repository {{{/svn}online in HTML form}} or do
+  You can browse the sorce at {{{https://github.com/polopoly/brap}GitHub}} or do
   an anonymous checkout:
 
 +--
-svn co http://brap.subversion.no/brap/trunk/brap brap
+git clone git://github.com/polopoly/brap.git brap
 +--

@@ -6,54 +6,10 @@ Getting BRAP
 
   BRAP 1.0 is the latest stable release. There are no known issues.
 
-* Download
-
-  Get the {{{http://brap.tornado.no/releases/brap-1.0-all.zip}latest release}} containing client, server, spring support, examples and dependencies.
-
 * Dependencies
 
-  Both the client and server needs the brap-common package. There are no external dependencies.
-
-* Maven
-
-  All releases are available in the {{{http://repo1.maven.org/maven2/no/tornado/brap}central Maven repository}}. Add the following to your pom.xml:
-
-+--
-<!-- Client -->
-<dependency>
-  <groupId>no.tornado.brap</groupId>
-  <artifactId>brap-client</artifactId>
-  <version>1.0</version>
-</dependency>
-
-<!-- Server -->
-<dependency>
-  <groupId>no.tornado.brap</groupId>
-  <artifactId>brap-server</artifactId>
-  <version>1.0</version>
-</dependency>
-
-<!-- Optional Spring support on the server -->
-<dependency>
-  <groupId>no.tornado.brap</groupId>
-  <artifactId>brap-spring</artifactId>
-  <version>1.0</version>
-</dependency>
-
-<!-- Optional modification support on the server -->
-<dependency>
-  <groupId>no.tornado.brap</groupId>
-  <artifactId>brap-modification</artifactId>
-  <version>1.0</version>
-</dependency>
-
-<!-- Optional Examples project -->
-<dependency>
-  <groupId>no.tornado.brap</groupId>
-  <artifactId>brap-examples</artifactId>
-  <version>1.0</version>
-</dependency>
-+--
+  Both the client and server needs the brap-common package. The client also 
+  depend on Apache HttpClient.
 
 * Source code
 

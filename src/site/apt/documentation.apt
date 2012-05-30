@@ -88,7 +88,8 @@ public class HelloServiceImpl implements HelloService {
   to the url of the exposed service:
 
 +--
-HelloService helloService = ServiceProxyFactory.createProxy(HelloService.class, "http://localhost:8080/HelloService");
+HttpClient client = new DefaultHttpClient();
+HelloService helloService = ServiceProxyFactory.createProxy(HelloService.class, client,"http://localhost:8080/HelloService");
 +--
 
   Note that you don't need to cast the result from createProxy(), due to generics. You can now use the class just as
@@ -158,8 +159,9 @@ helloService.sayHello("John Doe");
 +--
 User user = new User("john", "secret");
 
+HttpClient client = new DefaultHttpClient();
 HelloService helloService = (HelloService) ServiceProxyFactory.
-        createProxy(HelloService.class, "http://localhost:8080/HelloService", user);
+        createProxy(HelloService.class, client, "http://localhost:8080/HelloService", user);
 +--
 
   The user will now be available to the <AuthenticationProvider> in the <InvocationRequest#credentials> property.
