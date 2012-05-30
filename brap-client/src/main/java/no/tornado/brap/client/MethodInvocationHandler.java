@@ -125,18 +125,18 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(request);
+            oos.flush();
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
 
             InputStream streamToSend = null;
             if(streamArgument != null) {
-                // concat streams
-                streamToSend = new SequenceInputStream(ois, streamArgument);
+                streamToSend = new SequenceInputStream(bais, streamArgument);
             } else {
-                streamToSend = ois;
+                streamToSend = bais;
             }
             
-            HttpEntity entity = new InputStreamEntity(streamToSend, -1);
+            InputStreamEntity entity = new InputStreamEntity(streamToSend, -1);
+            entity.setChunked(true);
             post.setEntity(entity);
 
             HttpResponse httpresponse = httpClient.execute(post);

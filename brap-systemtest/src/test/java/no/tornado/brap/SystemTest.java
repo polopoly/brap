@@ -40,12 +40,11 @@ public class SystemTest {
     @After
     public void tearDown() throws Exception {
         server.stop();
-        server.destroy();
     };
     
     @Test
     public void testrunOnce() throws Exception {
-//        HttpClient client = new DefaultHttpClient();
+        HttpClient client = new DefaultHttpClient();
 //        HttpGet get = new HttpGet("http://localhost:8080");
 //        ResponseHandler<String> handler = new BasicResponseHandler();
 //        
@@ -53,7 +52,7 @@ public class SystemTest {
 //        
 //        System.out.println(result);
         
-        TestService service = ServiceProxyFactory.createProxy(TestService.class, "http://localhost:8080/TestService");
+        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
         
         System.out.println(service.echo("hej"));
         

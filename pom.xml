@@ -14,6 +14,7 @@
 		<module>brap-modification</module>
 		<module>brap-spring</module>
 		<module>brap-examples</module>
+		<module>brap-systemtest</module>
 	</modules>
 	<description>
 		BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
