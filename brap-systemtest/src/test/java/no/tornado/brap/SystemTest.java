@@ -26,7 +26,6 @@ public class SystemTest {
 
     private Server server;
 
-
     @Before
     public void setUp() throws Exception {
         server = new Server(8080);
@@ -40,14 +39,12 @@ public class SystemTest {
         context.addServlet(servletHolder, "/TestService");
         server.start();
     }
-    
-    
-    
+
     @After
     public void tearDown() throws Exception {
         server.stop();
     };
-    
+
     @Test
     public void runOnce() throws Exception {
         HttpClient client = new DefaultHttpClient();
@@ -55,45 +52,94 @@ public class SystemTest {
         runServices(service);
     }
 
-    
     @Test
     public void runManyTimes() throws Exception {
         HttpClient client = new DefaultHttpClient();
         TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
-        for(int i = 0; i < 1000; i++) 
+        for (int i = 0; i < 1000; i++)
             runServices(service);
     }
 
+    @Test
+    public void runMultiThreadedOnSameClient() throws Exception {
+        HttpClient client = new DefaultHttpClient();
+        final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
 
-
-    private void runServices(TestService service) throws IOException, UnsupportedEncodingException {
-        assertEquals("HEJHejhej", service.echo("Hej"));
-        service.doVoid();
-        assertEquals("getStream calling", readInputStream(service.getStream()));
-        service.setStream(new ByteArrayInputStream("hej".getBytes("UTF-8")));
-        service.setStreamAndString(new ByteArrayInputStream("hej".getBytes("UTF-8")), "hej");
-        service.setStringAndStream("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")));
-        service.setStringAndStreamAndInt("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")), 1);
-        try {
-            service.throwException();
-            fail("expected exception");
-        } catch (Exception e) {
-            // expected
-        }
+        Runnable t1 = new Runnable() {
+            public void run() {
+                for (int i = 0; i < 500; i++)
+                    runServices(service);
+            }
+        };
+        
+        Runnable t2 = new Runnable() {
+            public void run() {
+                for (int i = 0; i < 500; i++)
+                    runServices(service);
+            }
+        };
+        
+        t1.run();
+        t2.run();
     }
     
+    @Test
+    public void runMultiClient() throws Exception {
+        HttpClient client = new DefaultHttpClient();
+        final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+        final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+
+        Runnable t1 = new Runnable() {
+            public void run() {
+                for (int i = 0; i < 500; i++)
+                    runServices(service);
+            }
+        };
+        
+        Runnable t2 = new Runnable() {
+            public void run() {
+                for (int i = 0; i < 500; i++)
+                    runServices(service2);
+            }
+        };
+        
+        t1.run();
+        t2.run();
+    }
+
+
+    private void runServices(TestService service) {
+        try {
+            assertEquals("HEJHejhej", service.echo("Hej"));
+            service.doVoid();
+            assertEquals("getStream calling", readInputStream(service.getStream()));
+            service.setStream(new ByteArrayInputStream("hej".getBytes("UTF-8")));
+            service.setStreamAndString(new ByteArrayInputStream("hej".getBytes("UTF-8")), "hej");
+            service.setStringAndStream("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")));
+            service.setStringAndStreamAndInt("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")), 1);
+            try {
+                service.throwException();
+                fail("expected exception");
+            } catch (Exception e) {
+                // expected
+            }
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+    }
+
     private String readInputStream(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        
+
         InputStreamReader reader = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(reader);
         String read = br.readLine();
-    
-        while(read != null) {
+
+        while (read != null) {
             sb.append(read);
             read = br.readLine();
         }
         return sb.toString();
     }
-    
+
 }
