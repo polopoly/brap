@@ -15,6 +15,7 @@ import no.tornado.brap.test.TestService;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -25,6 +26,7 @@ import org.junit.Test;
 public class SystemTest {
 
     private Server server;
+    private volatile Exception threadException;
 
     @Before
     public void setUp() throws Exception {
@@ -60,53 +62,44 @@ public class SystemTest {
             runServices(service);
     }
 
-    @Test
-    public void runMultiThreadedOnSameClient() throws Exception {
-        HttpClient client = new DefaultHttpClient();
-        final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
 
-        Runnable t1 = new Runnable() {
-            public void run() {
-                for (int i = 0; i < 500; i++)
-                    runServices(service);
-            }
-        };
-        
-        Runnable t2 = new Runnable() {
-            public void run() {
-                for (int i = 0; i < 500; i++)
-                    runServices(service);
-            }
-        };
-        
-        t1.run();
-        t2.run();
-    }
-    
     @Test
-    public void runMultiClient() throws Exception {
-        HttpClient client = new DefaultHttpClient();
+    public void runMultiServiceOnSameClient() throws Exception {
+//        HttpClient client = new DefaultHttpClient();
+        HttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager());
         final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
         final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
 
-        Runnable t1 = new Runnable() {
+        Thread t1 = new Thread(new Runnable() {
             public void run() {
-                for (int i = 0; i < 500; i++)
-                    runServices(service);
+                try {
+                    for (int i = 0; i < 500; i++)
+                        runServices(service);
+                } catch (Exception e) {
+                    threadException = e;
+                }
             }
-        };
-        
-        Runnable t2 = new Runnable() {
-            public void run() {
-                for (int i = 0; i < 500; i++)
-                    runServices(service2);
-            }
-        };
-        
-        t1.run();
-        t2.run();
-    }
+        });
 
+        Thread t2 = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    for (int i = 0; i < 500; i++)
+                        runServices(service2);
+                } catch (Exception e) {
+                    threadException = e;
+                }
+            }
+        });
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+        
+        assertNull("got exception from a thread", threadException);
+
+    }
 
     private void runServices(TestService service) {
         try {
