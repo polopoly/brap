@@ -62,10 +62,23 @@ public class SystemTest {
             runServices(service);
     }
 
+//    /**
+//     * temp check for leaks
+//     * @throws Exception
+//     */
+//    @Test
+//    public void runyTimes() throws Exception {
+//        ThreadSafeClientConnManager conman = new ThreadSafeClientConnManager();
+//        HttpClient client = new DefaultHttpClient(conman);
+//        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
+//        while(true)
+//            runServices(service);
+//    }
+
+    
 
     @Test
     public void runMultiServiceOnSameClient() throws Exception {
-//        HttpClient client = new DefaultHttpClient();
         HttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager());
         final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
         final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:8080/TestService");
@@ -105,7 +118,10 @@ public class SystemTest {
         try {
             assertEquals("HEJHejhej", service.echo("Hej"));
             service.doVoid();
-            assertEquals("getStream calling", readInputStream(service.getStream()));
+            InputStream is = service.getStream();
+            String result = readInputStream(is);
+            is.close();
+            assertEquals("getStream calling", result);
             service.setStream(new ByteArrayInputStream("hej".getBytes("UTF-8")));
             service.setStreamAndString(new ByteArrayInputStream("hej".getBytes("UTF-8")), "hej");
             service.setStringAndStream("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")));
