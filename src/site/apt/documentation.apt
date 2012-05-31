@@ -102,19 +102,19 @@ helloService.sayHello("John Doe");
 * Authentication
 
   To provide authentication, BRAP uses the notion of an
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/AuthenticationProvider.html}AuthenticationProvider}}
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/auth/AuthenticationProvider.html}AuthenticationProvider}}
   and an
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/AuthorizationProvider.html}AuthorizationProvider}}.
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/auth/AuthorizationProvider.html}AuthorizationProvider}}.
 
   When you expose a remoting service, the actual service class
-  is wrapped in a {{{http://brap.tornado.no/apidocs/no/tornado/brap/servlet/ServiceWrapper.html}ServiceWrapper}}.
+  is wrapped in a {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/servlet/ServiceWrapper.html}ServiceWrapper}}.
 
   In addition to holding an instance of the actual service, the <ServiceWrapper> is also
   configured with the two mentioned auth-providers.
 
-  The <AuthenticationProvider> is handed the {{{http://brap.tornado.no/apidocs/no/tornado/brap/common/InvocationRequest.html}InvocationRequest}} which contains the credentials from the client
+  The <AuthenticationProvider> is handed the {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/common/InvocationRequest.html}InvocationRequest}} which contains the credentials from the client
   and tries to match it to an authenticated principal. If authentication is successful, the credentials are set in the
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/AuthenticationContext.html}AuthenticationContext}}
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/auth/AuthenticationContext.html}AuthenticationContext}}
   and can be retrieved using <AuthenticationContext.getPrincipal()>.
 
   The <AuthenticationProvider> must throw an <AuthenticationFailedException> unless the supplied credentials
@@ -178,7 +178,7 @@ ServiceProxyFactory.setCredentials(helloService, new User("other", "credentials"
 +--
 
   It is also possible to create your own version of the
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/client/MethodInvocationHandler.html}MethodInvocationHandler}}
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/client/MethodInvocationHandler.html}MethodInvocationHandler}}
   and override the <getCredentials> and <getServiceURI> methods so that you can supply fresh credentials/url's on
   every request.
   
@@ -205,7 +205,7 @@ public class HelloServiceImpl implements HelloService {
 
   [[1]] Subclass the provider and reference it in web.xml as usual
 
-  [[2]] Subclass the {{{http://brap.tornado.no/apidocs/no/tornado/brap/servlet/ProxyServlet.html}ProxyServlet}}
+  [[2]] Subclass the {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/servlet/ProxyServlet.html}ProxyServlet}}
   referred in web.xml and override <getServiceWrapper> or just one of <getAuthenticationProvider> or
   <getAuthorizationProvider>. Please see the javadoc for full details.
 
@@ -257,7 +257,7 @@ public class HelloServiceImpl implements HelloService {
 ** Authenticating using a database
 
   If you have a database with your users, you can initialize the
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/auth/DatabaseUsernamePasswordAuthenticator.html}DatabaseUsernamePasswordAuthenticator}}
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/auth/DatabaseUsernamePasswordAuthenticator.html}DatabaseUsernamePasswordAuthenticator}}
   either with Spring or programatically as mentioned above.
 
   You can subclass the authenticator to provide a different query string. Remember to pass in your datasource in the constructor
@@ -271,12 +271,12 @@ public class HelloServiceImpl implements HelloService {
 ** Protect methods depending on the supplied credentials
 
   The <AuthorizationProvider> recieves the actual
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/common/InvocationRequest.html}InvocationRequest}}
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/common/InvocationRequest.html}InvocationRequest}}
   so that it can lookup the actual method being invoked, intercept/modify the method arguments,
   and check the principal in the AuthenticationContext before authorizing the method invocation.
 
   The AuthorizationProvider will throw an
-  {{{http://brap.tornado.no/apidocs/no/tornado/brap/exception/AuthorizationFailedException.html}AuthorizationFailedException}}
+  {{{http://polopoly.github.com/brap/apidocs/no/tornado/brap/exception/AuthorizationFailedException.html}AuthorizationFailedException}}
   to signal that the supplied credentials were insufficient to invoke the requested method.
 
 * Pass by reference

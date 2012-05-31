@@ -10,3 +10,7 @@ Source Code for BRAP
 +--
 git clone git://github.com/polopoly/brap.git brap
 +--
+
+  You can also download the master branch of the source source as a 
+  {{{https://github.com/polopoly/brap/tarball/master}GitHub}tar} or 
+  {{{https://github.com/polopoly/brap/zipball/master}GitHub}zip} archive.
