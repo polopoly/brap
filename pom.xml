@@ -19,6 +19,8 @@
 	<description>
 		BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
 
+		This is a fork of the original BRAP and it uses HttpClient instead of HttpURLConnection.
+
 		It aims to be an alternative to Spring HttpInvoker and Spring Security
 		especially when you don't need or want the dependencies of Spring in your client, for example when
 		building a rich client application where size might be an issue.

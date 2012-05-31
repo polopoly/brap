@@ -6,7 +6,8 @@ This is the readme file for BRAP.
 This is not the original version of BRAP hosted at http://brap.tornado.no/
 
 This is a fork of BRAP that uses Apache HttpClient instead of 
-HttpURLConnection.
+HttpURLConnection. The site for this fork of BRAP can be found here:
+http://polopoly.github.com/brap/
 
 BRAP is a Java remoting protocol that uses native Java object serialization,
 encapsulated in HTTP.
@@ -97,4 +98,5 @@ mvn install
 Getting help
 ------------
 
+ - The documentation can be found here: http://polopoly.github.com/brap/ 
  - Bugs and feature requests goes here: https://github.com/polopoly/brap/issues
