@@ -10,7 +10,7 @@
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap-polopoly</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <dependencies>
         <dependency>
