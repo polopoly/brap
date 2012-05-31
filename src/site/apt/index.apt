@@ -17,7 +17,7 @@ Binary Remoting and Authentication Protocol
   especially when you don't need or want the dependencies of Spring in your client, for example when
   building a rich client application where size might be an issue.
 
-  BRAP supports {{{remoting-with-streams.html}remoting with streams}} to send and recieve large payloads, and you
+  BRAP supports {{{http://polopoly.github.com/brap/remoting-with-streams.html}remoting with streams}} to send and recieve large payloads, and you
   can easily add progress indicators and cancel/resume behaviour to such transfers.
 
   The authentication mechanism lets you use your own domain objects as credentials.
@@ -61,10 +61,9 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, client,"h
 
   Don't let the simplicity fool you - BRAP supports powerful customization and Spring integration for maximum flexibility!
 
-  Read the {{{documentation.html}short and concise documentation}}, the {{{/apidocs/index.html}apidocs}}
-  or browse the {{{source.html}source code}}.
+  Read the {{{http://polopoly.github.com/brap/documentation.html}short and concise documentation}}, the {{{http://polopoly.github.com/brap/apidocs/index.html}apidocs}} or browse the {{{http://polopoly.github.com/brap/getting-brap.html}source code}}.
 
 * Getting BRAP
 
   You can access all downloads including source code directly via HTTP
-  from the {{{getting-brap.html}Downloads page}}.
+  from the {{{http://polopoly.github.com/brap/getting-brap.html}Downloads page}}.

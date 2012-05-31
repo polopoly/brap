@@ -13,4 +13,13 @@ Getting BRAP
 
 * Source code
 
-  All source code is available online. See the {{{source.html}source}} page for more information.
+  You can browse the source at {{{https://github.com/polopoly/brap}GitHub}} or
+  do an anonymous checkout:
+
++--
+git clone git://github.com/polopoly/brap.git brap
++--
+
+  You can also download the master branch of the source source as a 
+  {{{https://github.com/polopoly/brap/tarball/master}tar}} or 
+  {{{https://github.com/polopoly/brap/zipball/master}zip}} archive.

@@ -9,8 +9,7 @@
             <item name="Miscellaneous" href="/misc.html"/>
             <item name="Documentation" href="/documentation.html"/>
             <item name="Getting BRAP" href="/getting-brap.html"/>
-            <item name="API Docs" href="/apidocs"/>
-            <item name="Source" href="/source.html"/>
+            <item name="API Docs" href="/apidocs/index.html"/>
             <item name="FAQ" href="/faq.html"/>
         </menu>
     </body>
