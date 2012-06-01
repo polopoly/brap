@@ -4,11 +4,11 @@
 
 Getting BRAP
 
-  BRAP 1.0 is the latest stable release. There are no known issues.
+  BRAP 1.1 is the latest stable release. There are no known issues.
 
 * Download
 
-  Get the {{{http://brap.tornado.no/releases/brap-1.0-all.zip}latest release}} containing client, server, spring support, examples and dependencies.
+  Get the {{{http://brap.tornado.no/releases/brap-1.1-all.zip}latest release}} containing client, server, spring support, examples and dependencies.
 
 * Dependencies
 
@@ -23,38 +23,38 @@ Getting BRAP
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-client</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 <!-- Server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-server</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 <!-- Optional Spring support on the server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-spring</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 <!-- Optional modification support on the server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-modification</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 <!-- Optional Examples project -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-examples</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 +--
 
 * Source code
 
-  All source code is available online. See the {{{source.html}source}} page for more information.
+  All source code is available online. See the {{{./source.html}source}} page for more information.

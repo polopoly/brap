@@ -6,12 +6,13 @@ import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.common.ModificationList;
 import no.tornado.brap.exception.RemotingException;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 
 /**
@@ -26,16 +27,35 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
     private String serviceURI;
     private Serializable credentials;
     private static final String REGEXP_PROPERTY_DELIMITER = "\\.";
+    private TransportProvider transportProvider;
+    private static TransportProvider defaultTransportProvider = new HttpURLConnectionTransportProvider();
 
     /**
      * Default constructor to use if you override <code>getServiceURI</code>
      * and <code>getCredentials</code> to provide "dynamic" service-uri and credentials.
+     *
+     * You can also provide a custom TransportProvider.
      */
     public MethodInvocationHandler() {
     }
 
     /**
-     * Creates the service proxy on the given URI with the given credentials.
+     * Creates the service proxy on the given URI with the given credentials and TransportProvider
+     * <p/>
+     * Credentials can be changed using the ServiceProxyFactory#setCredentials method.
+     * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
+     *
+     * @param serviceURI  The URI to the remote service
+     * @param credentials An object used to authenticate/authorize the request
+     */
+    public MethodInvocationHandler(String serviceURI, Serializable credentials, TransportProvider transportProvider) {
+        this.serviceURI = serviceURI;
+        this.credentials = credentials;
+        this.transportProvider = transportProvider;
+    }
+
+    /**
+     * Creates the service proxy on the given URI with the given credentials, using the default TransportProvider.
      * <p/>
      * Credentials can be changed using the ServiceProxyFactory#setCredentials method.
      * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
@@ -44,8 +64,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * @param credentials An object used to authenticate/authorize the request
      */
     public MethodInvocationHandler(String serviceURI, Serializable credentials) {
-        this.serviceURI = serviceURI;
-        this.credentials = credentials;
+        this(serviceURI, credentials, null);
     }
 
     /**
@@ -70,12 +89,12 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
         InvocationResponse response;
-        
+
+        TransportProvider currentProvider = transportProvider != null ? transportProvider : defaultTransportProvider;
+        TransportSession session = currentProvider.createSession(this);
+
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
-
-            HttpURLConnection conn = (HttpURLConnection) new URL(getServiceURI()).openConnection();
-            conn.setDoOutput(true);
 
             // Look for the first argument that is an input stream, remove the argument data from the argument array
             // and prepare to transfer the data via the connection outputstream after serializing the invocation request.
@@ -90,38 +109,24 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                 }
             }
 
-            if (streamArgument != null)
-                conn.setChunkedStreamingMode(ServiceProxyFactory.streamBufferSize);
-
-            ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
-            out.writeObject(request);
-            out.flush();
-
-            if (streamArgument != null)
-                sendStreamArgumentToHttpOutputStream(streamArgument, conn.getOutputStream());
+            InputStream inputStream = session.sendInvocationRequest(method, request, streamArgument);
 
             if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class))
-                return conn.getInputStream();     
+                return inputStream;
 
-            ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
+            ObjectInputStream in = new ObjectInputStream(inputStream);
             response = (InvocationResponse) in.readObject();
             applyModifications(args, response.getModifications());
-
         } catch (IOException e) {
             throw new RemotingException(e);
+        } finally {
+            currentProvider.endSession(session, this);
         }
 
         if (response.getException() != null)
             throw response.getException();
 
         return response.getResult();
-    }
-
-    private void sendStreamArgumentToHttpOutputStream(InputStream streamArgument, OutputStream outputStream) throws IOException {
-        byte[] buf = new byte[ServiceProxyFactory.streamBufferSize];
-        int len;
-        while ((len = streamArgument.read(buf)) > -1)
-            outputStream.write(buf, 0, len);
     }
 
     private void applyModifications(Object[] args, ModificationList[] modifications) {
@@ -194,6 +199,22 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
 
     public void setCredentials(Serializable credentials) {
         this.credentials = credentials;
+    }
+
+    public TransportProvider getTransportProvider() {
+        return transportProvider;
+    }
+
+    public void setTransportProvider(TransportProvider transportProvider) {
+        this.transportProvider = transportProvider;
+    }
+
+    public static TransportProvider getDefaultTransportProvider() {
+        return defaultTransportProvider;
+    }
+
+    public static void setDefaultTransportProvider(TransportProvider defaultTransportProvider) {
+        MethodInvocationHandler.defaultTransportProvider = defaultTransportProvider;
     }
 
 }

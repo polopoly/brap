@@ -4,9 +4,6 @@
                   
 Source Code for BRAP
 
-  You can browse the subversion repository {{{/svn}online in HTML form}} or do
-  an anonymous checkout:
-
 +--
 svn co http://brap.subversion.no/brap/trunk/brap brap
 +--

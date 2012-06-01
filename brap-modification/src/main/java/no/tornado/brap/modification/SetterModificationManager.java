@@ -77,7 +77,7 @@ public class SetterModificationManager implements ModificationManager {
         try {
             field.setAccessible(true);
             field.set(object, proxiedChild);
-        } catch (IllegalAccessException fieldSetAccessible) {
+        } catch (IllegalAccessException ignored) {
         }
     }
 
@@ -85,7 +85,7 @@ public class SetterModificationManager implements ModificationManager {
         field.setAccessible(true);
         try {
             return field.get(object);
-        } catch (IllegalAccessException fieldSetAccessible) {
+        } catch (IllegalAccessException ignored) {
         }
         return null;
     }

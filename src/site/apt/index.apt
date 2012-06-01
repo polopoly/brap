@@ -12,8 +12,11 @@ Binary Remoting and Authentication Protocol
   especially when you don't need or want the dependencies of Spring in your client, for example when
   building a rich client application where size might be an issue.
 
-  BRAP supports {{{remoting-with-streams.html}remoting with streams}} to send and recieve large payloads, and you
+  BRAP supports {{{./remoting-with-streams.html}remoting with streams}} to send and recieve large payloads, and you
   can easily add progress indicators and cancel/resume behaviour to such transfers.
+
+  You can choose to use either the default HttpURLConnection transport or the supplied support for Apache HttpClient,
+  or even easily create your own via the pluggable transport system.
 
   The authentication mechanism lets you use your own domain objects as credentials.
 
@@ -55,8 +58,8 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
 
   Don't let the simplicity fool you - BRAP supports powerful customization and Spring integration for maximum flexibility!
 
-  Read the {{{documentation.html}short and concise documentation}}, the {{{/apidocs/index.html}apidocs}}
-  or browse the {{{source.html}source code}}.
+  Read the {{{./documentation.html}short and concise documentation}}, the {{{./apidocs/index.html}apidocs}}
+  or browse the {{{./source.html}source code}}.
 
 * Getting BRAP
 
@@ -67,25 +70,25 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-client</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 <!-- Server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-server</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 <!-- Optional Spring support on the server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-spring</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 +--
 
   Also check out the brap-examples project for more information.
 
   Alternatively, you can access all downloads including source code directly via HTTP
-  from the {{{getting-brap.html}Downloads page}}.
+  from the {{{./getting-brap.html}Downloads page}}.

@@ -17,8 +17,6 @@ public class HelloServiceImpl implements HelloService {
         } else {
             return "Hello there, " + name;
         }
-
-
     }
 
     public void sendLargeStream(InputStream in) throws IOException {

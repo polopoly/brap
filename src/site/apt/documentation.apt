@@ -328,7 +328,7 @@ public class HelloServiceImpl implements HelloService {
 
 * Remoting with Streams
   
-  There is a separate page that describes {{{remoting-with-streams.html}remoting with streams}} and some gotchas.
+  There is a separate page that describes {{{./remoting-with-streams.html}remoting with streams}} and some gotchas.
   
 * More information
 

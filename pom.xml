@@ -71,7 +71,16 @@
 	</developers>
 	<build>
 		<plugins>
-			<plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <templateFile>${basedir}/src/site/maven-site.vm</templateFile>
+                </configuration>
+                <inherited>false</inherited>
+            </plugin>
+            <plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.5</source>
@@ -115,7 +124,7 @@
 					<smtpHost>smtp.sysedata.no</smtpHost>
 					<smtpPort implementation="java.lang.Integer">25</smtpPort>
 					<toAddresses>
-						<toAddress implementation="java.lang.String">edvin@sysedata.no</toAddress>
+						<toAddress implementation="java.lang.String">es@syse.no</toAddress>
 					</toAddresses>
 				</configuration>
 				<reportSets>
