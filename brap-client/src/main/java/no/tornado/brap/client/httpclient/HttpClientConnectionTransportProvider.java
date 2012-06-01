@@ -13,10 +13,11 @@ import java.io.IOException;
  * to provide a configured HttpClient. It is recommended to extend and override getHttpClient(),
  * and possibly include a pooling mechanism.</p>
  *
- * To use this provider as default, you can:
+ * <p>To use this provider as default, you can:</p>
  * <pre>MethodInvocationFactory.setDefaultTransportProvider(new HttpClientConnectionTransportProvider()).</pre>
  *
- * Alternatively you can supply this or another implementation to <code>ServiceProxyFactory.createProxy()</code>
+ * <p>Alternatively you can supply this or another implementation to <code>ServiceProxyFactory.createProxy()</code>
+ * by instantiating a <code>MethodInvocationHandler</code> with your <code>TransportProvider</code>.</p>
  */
 public class HttpClientConnectionTransportProvider implements TransportProvider<HttpClientTransportSession> {
     public HttpClientTransportSession createSession(MethodInvocationHandler invocationHandler) {

@@ -7,7 +7,8 @@ package no.tornado.brap.client;
  * You can change the default TransportProvider by calling the static method:
  * <pre>MethodInvocationFactory.setDefaultTransportProvider(yourImplementation).</pre>
  *
- * <p>Alternatively you can supply the TransportProvider to ServiceProxyFactory.createProxy()</p>
+ * <p>Alternatively you can supply the TransportProvider to ServiceProxyFactory.createProxy()
+ * by instantiating a <code>MethodInvocationHandler</code> with the <code>TransportProvider</code> of your choice.</p>
  *
  * @param <T>
  */
