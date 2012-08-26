@@ -4,13 +4,13 @@ Binary Remoting and Authentication Protocol
 
 Binary Remoting and Authentication Protocol
 
-  BRAP is a Java remoting protocol that uses native Java object serialization, encapsulated in HTTP.
+  BRAP is a Java and Android remoting protocol that uses native Java object serialization, encapsulated in HTTP.
 
   It aims to be a lightweight alternative to
   {{{http://static.springsource.org/spring/docs/2.5.x/reference/remoting.html#remoting-httpinvoker}Spring HttpInvoker}}
   and {{{http://static.springsource.org/spring-security/site/}Spring Security}}
   especially when you don't need or want the dependencies of Spring in your client, for example when
-  building a rich client application where size might be an issue.
+  building a rich client app or an Android app where size is important.
 
   BRAP supports {{{./remoting-with-streams.html}remoting with streams}} to send and recieve large payloads, and you
   can easily add progress indicators and cancel/resume behaviour to such transfers.
@@ -26,6 +26,8 @@ Binary Remoting and Authentication Protocol
   Server configuration can be expressed solely in web.xml or by subclassing the ProxyServlet but
   there is also an optional SpringProxyServlet available for seamless Spring Integration.
 
+  The client is used in exactly the same manner on both Java and Android (Tested with Android 4.1).
+
   BRAP focuses on being easy to use, small in size, yet powerful and extensible.
 
 * Accessing a remote service is simple:
@@ -38,11 +40,11 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
 
 +--
 <servlet>
-  <servlet-name>hello</servlet-name>
+  <servlet-name>myservice</servlet-name>
   <servlet-class>no.tornado.brap.servlet.ProxyServlet</servlet-class>
   <init-param>
     <param-name>service</param-name>
-    <param-value>com.example.HelloServiceImpl</param-value>
+    <param-value>com.example.MyServiceImpl</param-value>
   </init-param>
   <init-param>
     <param-name>authorizationProvider</param-name>
@@ -51,8 +53,8 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
 </servlet>
 
 <servlet-mapping>
-  <servlet-name>hello</servlet-name>
-    <url-pattern>/HelloService</url-pattern>
+  <servlet-name>myservice</servlet-name>
+    <url-pattern>/MyService</url-pattern>
 </servlet-mapping>
 +--
 
@@ -70,21 +72,21 @@ MyService myService = ServiceProxyFactory.createProxy(MyService.class, "http://e
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-client</artifactId>
-  <version>1.1</version>
+  <version>1.0</version>
 </dependency>
 
 <!-- Server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-server</artifactId>
-  <version>1.1</version>
+  <version>1.0</version>
 </dependency>
 
 <!-- Optional Spring support on the server -->
 <dependency>
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-spring</artifactId>
-  <version>1.1</version>
+  <version>1.0</version>
 </dependency>
 +--
 
