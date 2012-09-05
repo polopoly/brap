@@ -40,7 +40,7 @@ public class ServiceProxyFactory {
      *
      */
     public static <T> T createProxy(Class<? extends T> serviceInterface, HttpClient client, String serviceURI) {
-        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(client, serviceURI));
+        return serviceInterface.cast(Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(client, serviceURI)));
     }
 
     /**
@@ -55,7 +55,7 @@ public class ServiceProxyFactory {
      *
      */
     public static <T> T createProxy(Class<? extends T> serviceInterface, HttpClient client, String serviceURI, Serializable credentials) {
-        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(client, serviceURI, credentials));
+        return serviceInterface.cast(Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, new MethodInvocationHandler(client, serviceURI, credentials)));
     }
 
     /**
@@ -70,7 +70,7 @@ public class ServiceProxyFactory {
      * @return A service proxy that implements the given serviceInterface
      */
     public static <T> T createProxy(Class<? extends T> serviceInterface, MethodInvocationHandler methodInvocationHandler) {
-        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, methodInvocationHandler);
+        return serviceInterface.cast(Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, methodInvocationHandler));
     }
 
     /**

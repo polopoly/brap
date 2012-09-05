@@ -6,6 +6,9 @@ package no.tornado.brap.exception;
  * or insufficient.
  */
 public class AuthenticationFailedException extends Exception {
+
+    private static final long serialVersionUID = -310768736923016356L;
+
     public AuthenticationFailedException(String message) {
         super(message);
     }

@@ -10,6 +10,9 @@ import java.io.Serializable;
  * @see UsernamePasswordPrincipal
  */
 public class UsernamePasswordPrincipal implements Serializable {
+
+    private static final long serialVersionUID = 7788820635339769174L;
+
     private String username;
     private String password;
 

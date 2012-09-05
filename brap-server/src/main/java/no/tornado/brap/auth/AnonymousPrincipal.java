@@ -7,6 +7,9 @@ import java.io.Serializable;
  * if the active <code>AuthenticationProvider</code> does not set another one. 
  */
 public class AnonymousPrincipal implements Serializable {
+
+    private static final long serialVersionUID = -1377515124228489542L;
+
     public String getName() {
         return getClass().getCanonicalName();
     }

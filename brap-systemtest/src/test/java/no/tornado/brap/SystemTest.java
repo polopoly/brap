@@ -1,13 +1,14 @@
 package no.tornado.brap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import no.tornado.brap.client.ServiceProxyFactory;
 import no.tornado.brap.servlet.ProxyServlet;
@@ -15,7 +16,7 @@ import no.tornado.brap.test.TestService;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -79,7 +80,8 @@ public class SystemTest {
 
     @Test
     public void runMultiServiceOnSameClient() throws Exception {
-        HttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager());
+        PoolingClientConnectionManager conman = new PoolingClientConnectionManager();
+        HttpClient client = new DefaultHttpClient(conman);
         final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
         final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
 
@@ -109,9 +111,9 @@ public class SystemTest {
 
         t1.join();
         t2.join();
-        
-        assertNull("got exception from a thread", threadException);
 
+        assertNull("got exception from a thread", threadException);
+        conman.shutdown();
     }
 
     private void runServices(TestService service) {

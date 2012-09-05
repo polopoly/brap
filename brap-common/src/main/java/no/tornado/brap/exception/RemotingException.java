@@ -6,6 +6,9 @@ package no.tornado.brap.exception;
  * communication error occurs.
  */
 public class RemotingException extends RuntimeException {
+
+    private static final long serialVersionUID = 2499737830501102760L;
+
     public RemotingException(Exception e) {
         super(e);
     }
