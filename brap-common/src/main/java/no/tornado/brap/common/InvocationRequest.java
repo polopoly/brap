@@ -11,6 +11,9 @@ import java.lang.reflect.Method;
  * transported in the HTTP request body to the server.
  */
 public class InvocationRequest implements Serializable {
+
+    private static final long serialVersionUID = 5196343914032134791L;
+
     /**
      * The methodName to invoke on the remote service.
      */
@@ -19,7 +22,7 @@ public class InvocationRequest implements Serializable {
     /**
      * The type classes of the parameters if any
      */
-    private Class[] parameterTypes;
+    private Class<?>[] parameterTypes;
 
     /**
      * The parameters to the method call.
@@ -47,11 +50,11 @@ public class InvocationRequest implements Serializable {
         this.methodName = methodName;
     }
 
-    public Class[] getParameterTypes() {
+    public Class<?>[] getParameterTypes() {
         return parameterTypes;
     }
 
-    public void setParameterTypes(Class[] parameterTypes) {
+    public void setParameterTypes(Class<?>[] parameterTypes) {
         this.parameterTypes = parameterTypes;
     }
 

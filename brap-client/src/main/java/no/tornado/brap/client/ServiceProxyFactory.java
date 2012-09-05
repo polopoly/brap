@@ -27,7 +27,7 @@ import java.lang.reflect.Proxy;
 @SuppressWarnings("unchecked")
 public class ServiceProxyFactory {
     public static int streamBufferSize = 65535;
-    
+
     /**
      * Creates a proxy for the supplied serviceInterface class on the
      * supplied URI.
@@ -69,7 +69,7 @@ public class ServiceProxyFactory {
      * @return A service proxy that implements the given serviceInterface
      */
     public static <T> T createProxy(Class<? extends T> serviceInterface, MethodInvocationHandler methodInvocationHandler) {
-        return (T) Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, methodInvocationHandler);
+        return serviceInterface.cast(Proxy.newProxyInstance(serviceInterface.getClassLoader(), new Class[] { serviceInterface }, methodInvocationHandler));
     }
 
     /**

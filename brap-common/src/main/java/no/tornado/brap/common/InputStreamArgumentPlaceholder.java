@@ -8,4 +8,6 @@ import java.io.Serializable;
  * and the InputStream can be re-routed via the http OutputStream.
  */
 public class InputStreamArgumentPlaceholder implements Serializable {
+
+    private static final long serialVersionUID = 5234317114656930524L;
 }

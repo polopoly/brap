@@ -26,12 +26,12 @@ public class SetterModificationManager implements ModificationManager {
 
     public SetterModificationManager() {
         depth = DEFAULT_DEPTH;
-        proxyClassDefinitions = Collections.EMPTY_LIST;
+        proxyClassDefinitions = Collections.emptyList();
     }
 
     public SetterModificationManager(Integer depth, List<String> proxyClassDefinitions) {
         this.depth = depth;
-        this.proxyClassDefinitions = proxyClassDefinitions != null ? proxyClassDefinitions : Collections.EMPTY_LIST;
+        this.proxyClassDefinitions = proxyClassDefinitions != null ? proxyClassDefinitions : Collections.<String>emptyList();
     }
 
     public Object[] applyModificationScheme(Object[] objects) {
@@ -90,7 +90,7 @@ public class SetterModificationManager implements ModificationManager {
         return null;
     }
 
-    private boolean classShouldBeProxied(Class candidate) {
+    private boolean classShouldBeProxied(Class<?> candidate) {
         for (String classDefinition : proxyClassDefinitions) {
             if (candidate.getCanonicalName().startsWith(classDefinition.replace("*", "")))
                 return true;

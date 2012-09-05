@@ -8,6 +8,7 @@ import java.io.Serializable;
  *
  */
 public class InvocationResponse implements Serializable {
+    private static final long serialVersionUID = 6091102541452095141L;
 
     /**
      * Will hold any exception thrown by either the remote service method itself,

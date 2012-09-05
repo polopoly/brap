@@ -189,7 +189,7 @@ public class ProxyServlet implements Servlet {
                 invocationResponse.setException(ite.getTargetException());
             } else {
                 if (method != null && method.getExceptionTypes() != null) {
-                    for (Class exType : method.getExceptionTypes()) {
+                    for (Class<?> exType : method.getExceptionTypes()) {
                         if (exType.isAssignableFrom(e.getClass()))
                             invocationResponse.setException(e);
                     }
@@ -241,7 +241,7 @@ public class ProxyServlet implements Servlet {
         for (Method method : serviceWrapper.getService().getClass().getDeclaredMethods()) {
             s.append("<tr><td class=\"returnType\">" + method.getReturnType().getSimpleName() + "</td><td class=\"method\">");
             s.append("<strong>" + method.getName() + "</strong>(");
-            Class[] params = method.getParameterTypes();
+            Class<?>[] params = method.getParameterTypes();
             if (params != null && params.length > 0) {
                 for (int i = 0; i < params.length; i++) {
                     if (i > 0)
@@ -299,8 +299,8 @@ public class ProxyServlet implements Servlet {
      * @return
      * @throws NoSuchMethodException
      */
-    private Method getMethod(String methodName, Class[] parameterTypes) throws NoSuchMethodException {
-        Class serviceClass = serviceWrapper.getService().getClass();
+    private Method getMethod(String methodName, Class<?>[] parameterTypes) throws NoSuchMethodException {
+        Class<?> serviceClass = serviceWrapper.getService().getClass();
 
         while (serviceClass != null) {
             try {
