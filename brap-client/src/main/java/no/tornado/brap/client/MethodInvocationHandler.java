@@ -15,6 +15,17 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import no.tornado.brap.common.InputStreamArgumentPlaceholder;
+import no.tornado.brap.common.InvocationRequest;
+import no.tornado.brap.common.InvocationResponse;
+import no.tornado.brap.common.ModificationList;
+import no.tornado.brap.exception.RemotingException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+
 /**
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
  * of the supplied interface. It intercepts all method-calls and sends them
@@ -123,10 +134,24 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             currentProvider.endSession(session, this);
         }
 
-        if (response.getException() != null)
-            throw response.getException();
+        if (response.getException() != null) {
+            throw appendLocalStack(response.getException());
+        }
 
         return response.getResult();
+    }
+
+    private Throwable appendLocalStack(Throwable exception)
+    {
+        Throwable stack = new Throwable();
+        StackTraceElement[] thisStack = stack.getStackTrace();
+        StackTraceElement[] thatStack = exception.getStackTrace();
+        StackTraceElement[] st = new StackTraceElement[thisStack.length + 1 + thatStack.length];
+        System.arraycopy(thatStack, 0, st, 0, thatStack.length);
+        st[thatStack.length] = new StackTraceElement("REMOTE", "DELIMITER", "brap_http", 1);
+        System.arraycopy(thisStack, 0, st, thatStack.length + 1, thisStack.length);
+        exception.setStackTrace(st);
+        return exception;
     }
 
     private void applyModifications(Object[] args, ModificationList[] modifications) {
