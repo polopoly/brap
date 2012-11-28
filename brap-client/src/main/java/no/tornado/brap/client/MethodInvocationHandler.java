@@ -100,7 +100,6 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
         InvocationResponse response;
-
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
@@ -133,23 +132,29 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             } else {
                 streamToSend = bais;
             }
-            
+
             InputStreamEntity entity = new InputStreamEntity(streamToSend, -1);
             entity.setChunked(true);
             post.setEntity(entity);
 
             HttpResponse httpresponse = httpClient.execute(post);
-            
+
             if (!method.getReturnType().equals(Object.class)
                     && method.getReturnType().isAssignableFrom(InputStream.class)) {
                 return httpresponse.getEntity().getContent();
             }
-
-            InputStream contentInputStream = httpresponse.getEntity().getContent();
-            ObjectInputStream in = new ObjectInputStream(contentInputStream);
-            response = (InvocationResponse) in.readObject();
-            contentInputStream.close();
-            applyModifications(args, response.getModifications());
+            InputStream contentInputStream = null;
+            try {
+                contentInputStream = httpresponse.getEntity().getContent();
+                ObjectInputStream in = new ObjectInputStream(contentInputStream);
+                response = (InvocationResponse) in.readObject();
+                applyModifications(args, response.getModifications());
+            }
+            finally {
+                if (contentInputStream != null) {
+                    contentInputStream.close();
+                }
+            }
         } catch (IOException e) {
             throw new RemotingException(e);
         }
@@ -157,7 +162,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         if (response.getException() != null) {
             throw appendLocalStack(response.getException());
         }
-        
+
         return response.getResult();
     }
 
