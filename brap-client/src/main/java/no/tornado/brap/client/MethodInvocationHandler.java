@@ -143,17 +143,14 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                     && method.getReturnType().isAssignableFrom(InputStream.class)) {
                 return httpresponse.getEntity().getContent();
             }
-            InputStream contentInputStream = null;
+            InputStream contentInputStream = httpresponse.getEntity().getContent();
             try {
-                contentInputStream = httpresponse.getEntity().getContent();
                 ObjectInputStream in = new ObjectInputStream(contentInputStream);
                 response = (InvocationResponse) in.readObject();
                 applyModifications(args, response.getModifications());
             }
             finally {
-                if (contentInputStream != null) {
-                    contentInputStream.close();
-                }
+                contentInputStream.close();
             }
         } catch (IOException e) {
             throw new RemotingException(e);
