@@ -4,7 +4,7 @@
 	<groupId>no.tornado.brap</groupId>
 	<artifactId>brap</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0</version>
+	<version>1.0.1</version>
 	<url>http://brap.tornado.no/</url>
 	<name>BRAP</name>
 	<modules>
@@ -28,6 +28,9 @@
 		there is also an optional SpringProxyServlet available for seamless Spring Integration.
 
 		BRAP focuses on being easy to use, small in size (9 kb), yet powerful and extensible.
+
+        The client uses a pluggable TransportProvider with default implementations for HttpURLConnection and
+        Apache HttpClient.
 	</description>
 	<inceptionYear>2009</inceptionYear>
 	<licenses>
@@ -37,7 +40,7 @@
 		</license>
 	</licenses>
 	<organization>
-		<name>Syse Data AS</name>
+		<name>SYSE AS</name>
 		<url>https://www.syse.no/</url>
 	</organization>
 	<scm>
@@ -83,8 +86,8 @@
             <plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>

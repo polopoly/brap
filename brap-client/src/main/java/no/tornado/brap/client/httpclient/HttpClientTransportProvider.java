@@ -14,19 +14,32 @@ import java.io.IOException;
  * and possibly include a pooling mechanism.</p>
  *
  * <p>To use this provider as default, you can:</p>
- * <pre>MethodInvocationFactory.setDefaultTransportProvider(new HttpClientConnectionTransportProvider()).</pre>
+ * <pre>MethodInvocationFactory.setDefaultTransportProvider(new HttpClientTransportProvider()).</pre>
  *
  * <p>Alternatively you can supply this or another implementation to <code>ServiceProxyFactory.createProxy()</code>
  * by instantiating a <code>MethodInvocationHandler</code> with your <code>TransportProvider</code>.</p>
  */
-public class HttpClientConnectionTransportProvider implements TransportProvider<HttpClientTransportSession> {
+public class HttpClientTransportProvider implements TransportProvider<HttpClientTransportSession> {
+    private HttpClient httpClient;
+
+    public HttpClientTransportProvider() {
+        httpClient = new DefaultHttpClient();
+    }
+
+    public HttpClientTransportProvider(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
     public HttpClientTransportSession createSession(MethodInvocationHandler invocationHandler) {
-        HttpClient httpClient = getHttpClient();
         return new HttpClientTransportSession(httpClient, invocationHandler);
     }
 
-    protected HttpClient getHttpClient() {
-        return new DefaultHttpClient();
+    public HttpClient getHttpClient() {
+        return this.httpClient;
+    }
+
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     public void endSession(HttpClientTransportSession session, MethodInvocationHandler invocationHandler) {

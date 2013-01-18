@@ -4,24 +4,24 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap-client</artifactId>
     <packaging>bundle</packaging>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <name>BRAP Client</name>
     <description>Client Library for connecting to a BRAP-exposed remoting service.</description>
     <parent>
         <groupId>no.tornado.brap</groupId>
         <artifactId>brap</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>no.tornado.brap</groupId>
             <artifactId>brap-common</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.2</version>
+            <version>4.2.3</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
@@ -30,8 +30,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -42,7 +42,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            no.tornado.brap.client
+                            no.tornado.brap.client, no.tornado.brap.client.httpclient
                         </Export-Package>
                         <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
                     </instructions>

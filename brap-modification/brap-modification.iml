@@ -10,8 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="brap-server" />
-    <orderEntry type="module" module-name="brap-common" />
+    <orderEntry type="library" name="Maven: no.tornado.brap:brap-server:1.0" level="project" />
+    <orderEntry type="library" name="Maven: no.tornado.brap:brap-common:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-asm:3.0.5.RELEASE" level="project" />
