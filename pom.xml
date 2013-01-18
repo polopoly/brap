@@ -1,146 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>no.tornado.brap</groupId>
-	<artifactId>brap</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0.1</version>
-	<url>http://brap.tornado.no/</url>
-	<name>BRAP</name>
-	<modules>
-		<module>brap-common</module>
-		<module>brap-client</module>
-		<module>brap-server</module>
-		<module>brap-modification</module>
-		<module>brap-spring</module>
-		<module>brap-examples</module>
-	</modules>
-	<description>
-		BRAP is a Java and Android remoting protocol that uses native Java object serialization, encapsulated in HTTP.
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.tornado.brap</groupId>
+    <artifactId>brap</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.1</version>
+    <url>http://brap.tornado.no/</url>
+    <name>BRAP</name>
+    <modules>
+        <module>brap-common</module>
+        <module>brap-client</module>
+        <module>brap-server</module>
+        <module>brap-modification</module>
+        <module>brap-spring</module>
+        <module>brap-examples</module>
+    </modules>
+    <description>
+        BRAP is a Java and Android remoting protocol that uses native Java object serialization, encapsulated in HTTP.
 
-		It aims to be an alternative to Spring HttpInvoker and Spring Security
-		especially when you don't need or want the dependencies of Spring in your client, for example when
+        It aims to be an alternative to Spring HttpInvoker and Spring Security
+        especially when you don't need or want the dependencies of Spring in your client, for example when
         building a rich client app or an Android app where size is important.
 
-		The authentication mechanism lets you use your own domain objects as credentials.
+        The authentication mechanism lets you use your own domain objects as credentials.
 
-		Server configuration can be expressed solely in web.xml or by subclassing the ProxyServlet but
-		there is also an optional SpringProxyServlet available for seamless Spring Integration.
+        Server configuration can be expressed solely in web.xml or by subclassing the ProxyServlet but
+        there is also an optional SpringProxyServlet available for seamless Spring Integration.
 
-		BRAP focuses on being easy to use, small in size (9 kb), yet powerful and extensible.
+        BRAP focuses on being easy to use, small in size (9 kb), yet powerful and extensible.
 
         The client uses a pluggable TransportProvider with default implementations for HttpURLConnection and
         Apache HttpClient.
-	</description>
-	<inceptionYear>2009</inceptionYear>
-	<licenses>
-		<license>
-			<name>Apache License</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
-	<organization>
-		<name>SYSE AS</name>
-		<url>https://www.syse.no/</url>
-	</organization>
-	<scm>
-		<connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
-		<developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
-	  <url>http://svn.sonatype.org/spice/tags/oss-parent-7/brap</url>
-  </scm>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-	<distributionManagement>
-		<site>
-			<id>brap</id>
-			<name>BRAP Site</name>
-			<url>scp://brap.tornado.no//home/brap/webapps/ROOT</url>
-		</site>
-	</distributionManagement>
-	<developers>
-		<developer>
-			<name>Edvin Syse</name>
-			<email>edvin@sysedata.no</email>
-			<timezone>2</timezone>
-			<roles>
-				<role>Project Manager</role>
-				<role>Architect</role>
-				<role>Developer</role>
-			</roles>
-		</developer>
-	</developers>
-	<build>
-		<plugins>
+    </description>
+    <inceptionYear>2009</inceptionYear>
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <organization>
+        <name>SYSE AS</name>
+        <url>https://www.syse.no/</url>
+    </organization>
+    <scm>
+        <connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
+        <developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
+        <url>https://brap.subversion.no/brap/trunk/brap</url>
+    </scm>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+    <distributionManagement>
+        <site>
+            <id>brap</id>
+            <name>BRAP Site</name>
+            <url>scp://brap.tornado.no//home/brap/webapps/ROOT</url>
+        </site>
+    </distributionManagement>
+    <developers>
+        <developer>
+            <name>Edvin Syse</name>
+            <email>es@syse.no</email>
+            <timezone>2</timezone>
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <build>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <templateFile>${basedir}/src/site/maven-site.vm</templateFile>
-                </configuration>
+                <version>3.0-beta-3</version>
                 <inherited>false</inherited>
             </plugin>
             <plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.1</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assemble/all.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changes-maven-plugin</artifactId>
-				<configuration>
-					<smtpHost>smtp.sysedata.no</smtpHost>
-					<smtpPort implementation="java.lang.Integer">25</smtpPort>
-					<toAddresses>
-						<toAddress implementation="java.lang.String">es@syse.no</toAddress>
-					</toAddresses>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>changes-report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assemble/all.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changes-maven-plugin</artifactId>
+                <configuration>
+                    <smtpHost>smtp.sysedata.no</smtpHost>
+                    <smtpPort implementation="java.lang.Integer">25</smtpPort>
+                    <toAddresses>
+                        <toAddress implementation="java.lang.String">es@syse.no</toAddress>
+                    </toAddresses>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>
