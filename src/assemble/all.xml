@@ -34,35 +34,35 @@
             <directory>brap-client/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>brap-client-1.0.jar</include>
+                <include>brap-client-1.0.1.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>brap-server/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>brap-server-1.0.jar</include>
+                <include>brap-server-1.0.1.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>brap-common/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>brap-common-1.0.jar</include>
+                <include>brap-common-1.0.1.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>brap-spring/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>brap-spring-1.0.jar</include>
+                <include>brap-spring-1.0.1.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>brap-examples/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>brap-examples-1.0.jar</include>
+                <include>brap-examples-1.0.1.jar</include>
             </includes>
         </fileSet>
     </fileSets>

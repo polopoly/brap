@@ -38,5 +38,16 @@
                 Updated Spring, CGLIB and other optional dependencies to newest version.
             </action>
         </release>
+        <release version="1.0.1" date="2013-01-18" description="">
+            <action dev="Edvin Syse" type="add">
+                Pluggable Transport layer with HttpUrlConnection and Apache HttpClient default implementations.
+            </action>
+            <action dev="Edvin Syse" type="add">
+                2x speedup for the default TransportProvider (HttpUrlConnection) - about 20% faster than DefaultHttpClient.
+            </action>
+            <action dev="Edvin Syse" type="add">
+                Java 7 requirement.
+            </action>
+        </release>
     </body>
 </document>
