@@ -73,6 +73,13 @@
             </roles>
         </developer>
     </developers>
+    <dependencies>
+        <dependency>
+            <groupId>no.tornado</groupId>
+            <artifactId>inject</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
