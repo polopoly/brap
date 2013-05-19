@@ -11,11 +11,11 @@ public class InjectProxyServlet extends ProxyServlet {
 
         String authenticationProviderBean = servletConfig.getInitParameter("authenticationProviderBeanName");
         if (authenticationProviderBean != null)
-            serviceWrapper.setAuthenticationProvider((AuthenticationProvider) ApplicationContext.getBean("authenticationProviderBean"));
+            serviceWrapper.setAuthenticationProvider((AuthenticationProvider) ApplicationContext.getBean(authenticationProviderBean));
 
         String authorizationProviderBean = servletConfig.getInitParameter("authorizationProviderBeanName");
         if (authorizationProviderBean != null)
-            serviceWrapper.setAuthorizationProvider((AuthorizationProvider) ApplicationContext.getBean("authorizationProviderBean"));
+            serviceWrapper.setAuthorizationProvider((AuthorizationProvider) ApplicationContext.getBean(authorizationProviderBean));
     }
 
     protected Object getService() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
