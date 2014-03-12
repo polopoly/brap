@@ -104,6 +104,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         TransportProvider currentProvider = transportProvider != null ? transportProvider : defaultTransportProvider;
         TransportSession session = currentProvider.createSession(this);
 
+        boolean keepOpen = false;
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
 
@@ -122,8 +123,10 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
 
             InputStream inputStream = session.sendInvocationRequest(method, request, streamArgument);
 
-            if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class))
+            if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class)) {
+                keepOpen = true;
                 return inputStream;
+            }
 
             ObjectInputStream in = new ObjectInputStream(inputStream);
             response = (InvocationResponse) in.readObject();
@@ -131,7 +134,9 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         } catch (IOException e) {
             throw new RemotingException(e);
         } finally {
-            currentProvider.endSession(session, this);
+            if (!keepOpen) {
+                currentProvider.endSession(session, this);
+            }
         }
 
         if (response.getException() != null) {
