@@ -5,7 +5,7 @@
     <groupId>no.tornado.brap</groupId>
     <artifactId>brap</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-pp</version>
     <url>http://brap.tornado.no/</url>
     <name>BRAP</name>
     <modules>
@@ -45,9 +45,9 @@
         <url>https://www.syse.no/</url>
     </organization>
     <scm>
-        <connection>scm:svn:https://brap.subversion.no/brap/trunk/brap</connection>
-        <developerConnection>scm:svn:https://brap.subversion.no/brap/trunk/brap</developerConnection>
-        <url>https://brap.subversion.no/brap/trunk/brap</url>
+        <connection>scm:git:https://github.com/polopoly/brap.git</connection>
+        <developerConnection>scm:git:https://github.com/polopoly/brap.git</developerConnection>
+        <url>https://github.com/polopoly/brap</url>
     </scm>
     <parent>
         <groupId>org.sonatype.oss</groupId>
