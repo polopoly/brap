@@ -7,11 +7,15 @@ import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.exception.RemotingException;
 import no.tornado.brap.modification.ChangesIgnoredModificationManager;
 import no.tornado.brap.modification.ModificationManager;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * This ProxyServlet is configured from web.xml for each service you wish
@@ -161,7 +165,7 @@ public class ProxyServlet implements Servlet {
         Object result = null;
         try {
             invocationResponse = new InvocationResponse();
-            invocationRequest = (InvocationRequest) new ObjectInputStream(request.getInputStream()).readObject();
+            invocationRequest = getInvocationRequest((HttpServletRequest) request);
 
             serviceWrapper.getAuthenticationProvider().authenticate(invocationRequest);
             serviceWrapper.getAuthorizationProvider().authorize(invocationRequest);
@@ -180,9 +184,10 @@ public class ProxyServlet implements Servlet {
 
             preMethodInvocation();
             result = method.invoke(serviceWrapper.getService(), proxiedParameters);
-            invocationResponse.setResult((Serializable) result);
-            invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
-
+            if (!(result instanceof InputStream)) {
+                invocationResponse.setResult((Serializable) result);
+                invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
+            }
         } catch (Exception e) {
             if (e instanceof InvocationTargetException) {
                 InvocationTargetException ite = (InvocationTargetException) e;
@@ -220,6 +225,44 @@ public class ProxyServlet implements Servlet {
                 }
             }
         }
+    }
+
+    private InvocationRequest getInvocationRequest(HttpServletRequest request)
+        throws IOException, ClassNotFoundException
+    {
+        InputStream requestData = null;
+        if ("POST".equals(request.getMethod())) {
+            requestData = request.getInputStream();
+        }
+        else if ("GET".equals(request.getMethod()) && request.getPathInfo() != null)
+        {
+            String servletPath = request.getServletPath();
+            String base64EncodedRequestData = null;
+            try
+            {
+                // We really want request.getPathInfo() but unfortunately they normalize '/' which breaks the encoding
+                // so we have to fish it out of the request URI
+                String contextPath = request.getContextPath();
+                base64EncodedRequestData = new URI(request.getRequestURI()).getPath().substring(contextPath.length()
+                                                                                                + servletPath.length()
+                                                                                                + 1);
+            }
+            catch (URISyntaxException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (Throwable e) {
+                e.printStackTrace();
+            }
+            byte[] bytes = Base64.decodeBase64(base64EncodedRequestData);
+            requestData = new ByteArrayInputStream(bytes);
+        }
+        else {
+            throw new IOException("Request missing");
+        }
+        InvocationRequest invocationRequest =
+            (InvocationRequest) new ObjectInputStream(requestData).readObject();
+        return invocationRequest;
     }
 
     /**

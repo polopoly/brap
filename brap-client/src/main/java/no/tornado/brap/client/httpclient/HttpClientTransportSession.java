@@ -3,9 +3,13 @@ package no.tornado.brap.client.httpclient;
 import no.tornado.brap.client.MethodInvocationHandler;
 import no.tornado.brap.client.TransportSession;
 import no.tornado.brap.common.InvocationRequest;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.InputStreamEntity;
 
 import java.io.ByteArrayInputStream;
@@ -29,26 +33,34 @@ public class HttpClientTransportSession implements TransportSession {
     }
 
     public InputStream sendInvocationRequest(Method method, InvocationRequest request, InputStream streamArgument) throws URISyntaxException, IOException {
-        HttpPost post = new HttpPost(new URI(invocationHandler.getServiceURI()));
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(request);
         oos.flush();
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        byte[] serializedRequest = baos.toByteArray();
+        ByteArrayInputStream bais = new ByteArrayInputStream(serializedRequest);
 
-        InputStream streamToSend;
+        InputStream streamToSend = null;
         if(streamArgument != null) {
             streamToSend = new SequenceInputStream(bais, streamArgument);
-        } else {
+        } else if (serializedRequest.length > 1024) {
             streamToSend = bais;
         }
 
-        InputStreamEntity entity = new InputStreamEntity(streamToSend, -1);
-        entity.setChunked(true);
-        post.setEntity(entity);
+        HttpUriRequest httpRequest;
+        if (streamToSend != null) {
+            HttpPost post = new HttpPost(new URI(invocationHandler.getServiceURI()));
+            InputStreamEntity entity = new InputStreamEntity(streamToSend, -1);
+            entity.setChunked(true);
+            post.setEntity(entity);
+            httpRequest = post;
+        }
+        else {
+            httpRequest = new HttpGet(new URI(invocationHandler.getServiceURI()) + "/" + new String(Base64.encodeBase64(serializedRequest), "ASCII"));
+        }
 
-        httpResponse = httpClient.execute(post);
+        httpResponse = httpClient.execute(httpRequest);
         return httpResponse.getEntity().getContent();
     }
 

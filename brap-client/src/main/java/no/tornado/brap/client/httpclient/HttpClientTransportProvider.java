@@ -44,7 +44,9 @@ public class HttpClientTransportProvider implements TransportProvider<HttpClient
 
     public void endSession(HttpClientTransportSession session, MethodInvocationHandler invocationHandler) {
         try {
-            session.getHttpResponse().getEntity().getContent().close();
+            if (session.getHttpResponse() != null) {
+                session.getHttpResponse().getEntity().getContent().close();
+            }
         } catch (IOException ignored) {
         }
     }

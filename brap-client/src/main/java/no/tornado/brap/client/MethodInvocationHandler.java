@@ -122,17 +122,19 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             }
 
             InputStream inputStream = session.sendInvocationRequest(method, request, streamArgument);
+            try {
 
-            if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class)) {
-                keepOpen = true;
-                return inputStream;
+                if (!method.getReturnType().equals(Object.class) && method.getReturnType().isAssignableFrom(InputStream.class)) {
+                    keepOpen = true;
+                    return inputStream;
+                }
+
+                ObjectInputStream in = new ObjectInputStream(inputStream);
+                response = (InvocationResponse) in.readObject();
+                applyModifications(args, response.getModifications());
+            } catch (IOException e) {
+                throw new RemotingException(e);
             }
-
-            ObjectInputStream in = new ObjectInputStream(inputStream);
-            response = (InvocationResponse) in.readObject();
-            applyModifications(args, response.getModifications());
-        } catch (IOException e) {
-            throw new RemotingException(e);
         } finally {
             if (!keepOpen) {
                 currentProvider.endSession(session, this);
