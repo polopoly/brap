@@ -280,6 +280,7 @@ public class ProxyServlet implements Servlet {
         while ((len = in.read(buf)) != -1) {
             out.write(buf, 0, len);
         }
+        in.close();
     }
 
     public ModificationManager getModificationManager() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
