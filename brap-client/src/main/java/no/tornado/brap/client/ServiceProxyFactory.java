@@ -34,7 +34,7 @@ public class ServiceProxyFactory {
      * supplied URI.
      *
      *
-     * @param serviceInterface The service inteface to implement
+     * @param serviceInterface The service interface to implement
      * @param serviceURI A fully qualified URI to the remote service
      * @return A service proxy that implements the given serviceInterface
      *
