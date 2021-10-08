@@ -1,12 +1,13 @@
 package no.tornado.brap.auth;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.UsernamePasswordPrincipal;
 import no.tornado.brap.exception.AuthenticationFailedException;
-
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * Authenticator that uses a JDBC datasource to perform the authentication.
@@ -18,7 +19,7 @@ import java.sql.SQLException;
  * TODO: Handle connections properly!!
  */
 public class DatabaseUsernamePasswordAuthenticator implements AuthenticationProvider {
-    private DataSource dataSource;
+    private final DataSource dataSource;
     private PreparedStatement cachedAuthStatement;
     
     public DatabaseUsernamePasswordAuthenticator(DataSource dataSource) {

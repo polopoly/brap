@@ -1,11 +1,12 @@
 package no.tornado.brap.modification;
 
-import no.tornado.brap.common.ModificationList;
-import org.springframework.aop.framework.ProxyFactory;
-
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
+
+import org.springframework.aop.framework.ProxyFactory;
+
+import no.tornado.brap.common.ModificationList;
 
 /**
  * This modificationmanager tracks changes to objects by proxying each invocation argument object
@@ -77,7 +78,7 @@ public class SetterModificationManager implements ModificationManager {
         try {
             field.setAccessible(true);
             field.set(object, proxiedChild);
-        } catch (IllegalAccessException fieldSetAccessible) {
+        } catch (IllegalAccessException ignore) {
         }
     }
 
@@ -85,7 +86,7 @@ public class SetterModificationManager implements ModificationManager {
         field.setAccessible(true);
         try {
             return field.get(object);
-        } catch (IllegalAccessException fieldSetAccessible) {
+        } catch (IllegalAccessException ignore) {
         }
         return null;
     }

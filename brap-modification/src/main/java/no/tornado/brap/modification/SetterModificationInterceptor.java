@@ -1,10 +1,11 @@
 package no.tornado.brap.modification;
 
-import no.tornado.brap.common.ModificationList;
+import java.lang.reflect.Method;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import java.lang.reflect.Method;
+import no.tornado.brap.common.ModificationList;
 
 public class SetterModificationInterceptor implements MethodInterceptor {
     private final String parentPath;
@@ -18,7 +19,7 @@ public class SetterModificationInterceptor implements MethodInterceptor {
     private String getPropertyName(Method method, Object[] args) {
         if (method.getName().startsWith("set") && args.length == 1) {
             String propertyName = method.getName().substring(3);
-            return new String(new char[] {propertyName.charAt(0)}).toLowerCase() + propertyName.substring(1);
+            return String.valueOf(propertyName.charAt(0)).toLowerCase() + propertyName.substring(1);
         }
 
         return null;

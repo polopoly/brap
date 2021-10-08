@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @see no.tornado.brap.auth.AuthorizationProvider
  */
 public class AuthenticationContext {
-    private static ThreadLocal<Serializable> principalHolder = new ThreadLocal<Serializable>();
+    private static final ThreadLocal<Serializable> principalHolder = new ThreadLocal<Serializable>();
 
     /**
      * Return the current principal. If none is set, the default

@@ -1,17 +1,31 @@
 package no.tornado.brap.servlet;
 
-import no.tornado.brap.auth.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+import no.tornado.brap.auth.AuthenticationContext;
+import no.tornado.brap.auth.AuthenticationNotRequiredAuthenticator;
+import no.tornado.brap.auth.AuthenticationProvider;
+import no.tornado.brap.auth.AuthenticationRequiredAuthorizer;
+import no.tornado.brap.auth.AuthorizationProvider;
 import no.tornado.brap.common.InputStreamArgumentPlaceholder;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.exception.RemotingException;
 import no.tornado.brap.modification.ChangesIgnoredModificationManager;
 import no.tornado.brap.modification.ModificationManager;
-
-import javax.servlet.*;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * This ProxyServlet is configured from web.xml for each service you wish
@@ -194,19 +208,21 @@ public class ProxyServlet implements Servlet {
                             invocationResponse.setException(e);
                     }
                 }
-                invocationResponse.setException(new RemotingException(e));
+                if (invocationResponse != null) {
+                    invocationResponse.setException(new RemotingException(e));
+                }
             }
         } finally {
             AuthenticationContext.exit();
             postMethodInvocation();
-            if (result != null && result instanceof InputStream) {
+            if (result instanceof InputStream) {
                 streamResultToResponse(result, response);
             } else {
                 try {
                     if (invocationRequest != null) {
-                        ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
-                        out.writeObject(invocationResponse);
-                        out.close();
+                        try (ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream())) {
+                            out.writeObject(invocationResponse);
+                        }
                     } else {
                         respondWithInterfaceDeclaration(response);
                     }
@@ -214,9 +230,9 @@ public class ProxyServlet implements Servlet {
                     InvocationResponse reporter = new InvocationResponse();
                     reporter.setException(new RuntimeException(e.getClass() + " error while writing result: " + e.getMessage()));
 
-                    ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
-                    out.writeObject(reporter);
-                    out.close();
+                    try (ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream())) {
+                        out.writeObject(reporter);
+                    }
                 }
             }
         }
@@ -252,9 +268,9 @@ public class ProxyServlet implements Servlet {
             s.append(")</td></tr>");
         }
         s.append("</table>");
-        OutputStream out = response.getOutputStream();
-        out.write(s.toString().getBytes());
-        out.close();
+        try (OutputStream out = response.getOutputStream()) {
+            out.write(s.toString().getBytes());
+        }
     }
 
     /**
@@ -273,14 +289,14 @@ public class ProxyServlet implements Servlet {
     }
 
     private void streamResultToResponse(Object result, ServletResponse response) throws IOException {
-        InputStream in = (InputStream) result;
-        OutputStream out = response.getOutputStream();
-        byte[] buf = new byte[getStreamBufferSize()];
-        int len;
-        while ((len = in.read(buf)) != -1) {
-            out.write(buf, 0, len);
+        try (InputStream in = (InputStream) result) {
+            OutputStream out = response.getOutputStream();
+            byte[] buf = new byte[getStreamBufferSize()];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
         }
-        in.close();
     }
 
     public ModificationManager getModificationManager() throws ClassNotFoundException, IllegalAccessException, InstantiationException {

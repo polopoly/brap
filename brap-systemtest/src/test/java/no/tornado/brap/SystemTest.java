@@ -9,10 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import no.tornado.brap.client.ServiceProxyFactory;
-import no.tornado.brap.servlet.ProxyServlet;
-import no.tornado.brap.test.TestService;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -21,13 +18,30 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import no.tornado.brap.client.ServiceProxyFactory;
+import no.tornado.brap.servlet.ProxyServlet;
+import no.tornado.brap.test.TestService;
 
 public class SystemTest {
 
     private Server server;
     private volatile Exception threadException;
+
+    @BeforeClass
+    public static void beforeClass() throws IOException {
+        SocketHelpers.init();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        Assert.assertEquals(0, SocketHelpers.checkOpenSockets("END"));;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -85,25 +99,23 @@ public class SystemTest {
         final TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
         final TestService service2 = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
 
-        Thread t1 = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    for (int i = 0; i < 500; i++)
-                        runServices(service);
-                } catch (Exception e) {
-                    threadException = e;
+        Thread t1 = new Thread(() -> {
+            try {
+                for (int i = 0; i < 500; i++) {
+                    runServices(service);
                 }
+            } catch (Exception e) {
+                threadException = e;
             }
         });
 
-        Thread t2 = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    for (int i = 0; i < 500; i++)
-                        runServices(service2);
-                } catch (Exception e) {
-                    threadException = e;
+        Thread t2 = new Thread(() -> {
+            try {
+                for (int i = 0; i < 500; i++) {
+                    runServices(service2);
                 }
+            } catch (Exception e) {
+                threadException = e;
             }
         });
         t1.start();
@@ -120,14 +132,14 @@ public class SystemTest {
         try {
             assertEquals("HEJHejhej", service.echo("Hej"));
             service.doVoid();
-            InputStream is = service.getStream();
-            String result = readInputStream(is);
-            is.close();
-            assertEquals("getStream calling", result);
-            service.setStream(new ByteArrayInputStream("hej".getBytes("UTF-8")));
-            service.setStreamAndString(new ByteArrayInputStream("hej".getBytes("UTF-8")), "hej");
-            service.setStringAndStream("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")));
-            service.setStringAndStreamAndInt("hej", new ByteArrayInputStream("hej".getBytes("UTF-8")), 1);
+            try (InputStream is = service.getStream()) {
+                String result = readInputStream(is);
+                assertEquals("getStream calling", result);
+            }
+            service.setStream(new ByteArrayInputStream("hej".getBytes(StandardCharsets.UTF_8)));
+            service.setStreamAndString(new ByteArrayInputStream("hej".getBytes(StandardCharsets.UTF_8)), "hej");
+            service.setStringAndStream("hej", new ByteArrayInputStream("hej".getBytes(StandardCharsets.UTF_8)));
+            service.setStringAndStreamAndInt("hej", new ByteArrayInputStream("hej".getBytes(StandardCharsets.UTF_8)), 1);
             try {
                 service.throwException();
                 fail("expected exception");

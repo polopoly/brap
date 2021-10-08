@@ -13,17 +13,20 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.util.EntityUtils;
 
 import no.tornado.brap.common.InputStreamArgumentPlaceholder;
 import no.tornado.brap.common.InvocationRequest;
 import no.tornado.brap.common.InvocationResponse;
 import no.tornado.brap.common.ModificationList;
 import no.tornado.brap.exception.RemotingException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
@@ -34,6 +37,8 @@ import org.apache.http.entity.InputStreamEntity;
  * in the <code>ServiceProxyFactory</code>.
  */
 public class MethodInvocationHandler implements InvocationHandler, Serializable {
+
+    private static final Logger LOG = Logger.getLogger(MethodInvocationHandler.class.getName());
 
     private static final long serialVersionUID = -4707857501935404577L;
     private String serviceURI;
@@ -99,6 +104,14 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * @return Object the result of the method invocation
      */
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine(String.format(
+                    "Invoke %s.%s returning %s",
+                    obj.getClass().getName(),
+                    method.getName(),
+                    method.getReturnType().getName()
+            ));
+        }
         InvocationResponse response;
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
@@ -120,37 +133,47 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
             HttpPost post = new HttpPost(new URI(getServiceURI()));
 
             // serialize invocation object
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(request);
-            oos.flush();
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                    oos.writeObject(request);
+                    oos.flush();
+                }
+                ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-            InputStream streamToSend = null;
-            if(streamArgument != null) {
-                streamToSend = new SequenceInputStream(bais, streamArgument);
-            } else {
-                streamToSend = bais;
-            }
+                InputStream streamToSend = null;
+                if (streamArgument != null) {
+                    streamToSend = new SequenceInputStream(bais, streamArgument);
+                } else {
+                    streamToSend = bais;
+                }
 
-            InputStreamEntity entity = new InputStreamEntity(streamToSend, -1);
-            entity.setChunked(true);
-            post.setEntity(entity);
+                final InputStreamEntity entity = new InputStreamEntity(streamToSend, -1);
+                entity.setChunked(true);
+                post.setEntity(entity);
 
-            HttpResponse httpresponse = httpClient.execute(post);
+                try {
+                    HttpResponse httpresponse = httpClient.execute(post);
 
-            if (!method.getReturnType().equals(Object.class)
-                    && method.getReturnType().isAssignableFrom(InputStream.class)) {
-                return httpresponse.getEntity().getContent();
-            }
-            InputStream contentInputStream = httpresponse.getEntity().getContent();
-            try {
-                ObjectInputStream in = new ObjectInputStream(contentInputStream);
-                response = (InvocationResponse) in.readObject();
-                applyModifications(args, response.getModifications());
-            }
-            finally {
-                contentInputStream.close();
+                    if (!method.getReturnType().equals(Object.class)
+                            && method.getReturnType().isAssignableFrom(InputStream.class)) {
+                        return httpresponse.getEntity().getContent();
+                    }
+                    try (InputStream contentInputStream = httpresponse.getEntity().getContent()) {
+                        try {
+                            try (ObjectInputStream in = new ObjectInputStream(contentInputStream)) {
+                                response = (InvocationResponse) in.readObject();
+                                applyModifications(args, response.getModifications());
+                            }
+                        } finally {
+                            closeStream(contentInputStream);
+                        }
+                    } finally {
+                        EntityUtils.consumeQuietly(httpresponse.getEntity());
+                    }
+                } finally {
+                    EntityUtils.consumeQuietly(entity);
+                    closeStream(streamToSend);
+                }
             }
         } catch (IOException e) {
             throw new RemotingException(e);
@@ -163,8 +186,19 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         return response.getResult();
     }
 
-    private Throwable appendLocalStack(Throwable exception)
-    {
+    protected void closeStream(final InputStream s) {
+        if (null == s) {
+            return;
+        }
+
+        try {
+            s.close();
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Got exception when closing InputStream.", e);
+        }
+    }
+
+    private Throwable appendLocalStack(Throwable exception) {
         Throwable stack = new Throwable();
         StackTraceElement[] thisStack = stack.getStackTrace();
         StackTraceElement[] thatStack = exception.getStackTrace();
@@ -223,7 +257,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * than just setting the value.
      *
      * @return The serviceURI for subsequent method invocations.
-     * @see no.tornado.brap.client.ServiceProxyFactory#setServiceURI(Object, String)
+     * @see ServiceProxyFactory#setServiceURI(Object, String)
      */
     public String getServiceURI() {
         return serviceURI;
@@ -238,7 +272,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
      * than just setting the values.
      *
      * @return The credentials to use for subsequent method invocations.
-     * @see no.tornado.brap.client.ServiceProxyFactory#setCredentials(Object, java.io.Serializable)
+     * @see ServiceProxyFactory#setCredentials(Object, Serializable)
      */
     public Serializable getCredentials() {
         return credentials;
