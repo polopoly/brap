@@ -26,15 +26,14 @@ public interface AuthorizationProvider {
      * after an incoming invocation request is authenticated, and before the
      * method is invoked on the exposed service.
      *
-     * If a successful auhtorization is made, true is returned.
+     * If a successful authorization is made, true is returned.
      *
      * Normally the <code>AuthenticationContext#getPrincipal()</code> method is consulted
      * to retrieve the principal, so that the principal and the invocationRequest
      * can be matched.
      *
      * @param invocationRequest The deserialized InvocationRequest
-     * @return true if the credentials passed authentication
-     * @throws no.tornado.brap.exception.AuthorizationFailedException to signal insufficient credentials
+     * @throws AuthorizationFailedException to signal insufficient credentials
      *
      * @see no.tornado.brap.auth.AuthenticationProvider
      * @see no.tornado.brap.common.InvocationRequest

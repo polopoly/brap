@@ -30,15 +30,16 @@ import no.tornado.brap.modification.ModificationManager;
 /**
  * This ProxyServlet is configured from web.xml for each service you wish
  * to expose as a remoting service.
- * <p/>
+ * <p>
  * This class provides the basic capabilities needed to instantiate and expose
  * a remoting service. Only <code>service</code> is required. The rest of
  * the parameters have default values.
- * <p/>
- * Concider subclassing to provide custom creation by overriding
+ * </p>
+ * <p>
+ * Consider subclassing to provide custom creation by overriding
  * <code>getServiceWrapper</code> or just one of
  * <code>getAuthenticationProvider</code> or <code>getAuthorizationProvider</code>.
- * <p/>
+ * </p>
  * <p>Example of exposing a remoting service without requiring authentication:</p>
  * <pre>
  *  &lt;servlet&gt;
@@ -82,8 +83,9 @@ public class ProxyServlet implements Servlet {
 
     /**
      * Override this method to control every detail of the creation of the service wrapper.
-     * <p/>
+     * <p>
      * Normally you would just override one or more of the methods that provide the service wrapper details.
+     * </p>
      *
      * @see ProxyServlet#getService()
      * @see ProxyServlet#getAuthenticationProvider()
@@ -103,9 +105,10 @@ public class ProxyServlet implements Servlet {
      * an AuthenticationProvider is sufficient, but you can use the Authorization Provider
      * to allow/deny access to spesific method-calls based on the principal in
      * <code>AuthenticationContext#getPrincipal()</code>.
-     * <p/>
+     * <p>
      * You can either subclass or supply the "authorizationProvider" init-param to
      * change the AuthorizationProvider.
+     * </p>
      *
      * @return the AuthorizationProvider
      */
@@ -119,9 +122,10 @@ public class ProxyServlet implements Servlet {
     /**
      * Override to configure a different Authentication Provider. The default provider
      * authenticates every invocation.
-     * <p/>
+     * <p>
      * You can either subclass or supply the "authenticationProvider" init-param to
      * change the AuthenticationProvider.
+     * </p>
      *
      * @return the AuthenticationProvider
      */
@@ -134,9 +138,10 @@ public class ProxyServlet implements Servlet {
 
     /**
      * Supply the service to expose via this servlet.
-     * <p/>
+     * <p>
      * You can either subclass or supply the "service" init-param to
      * configure what service class to instantiate.
+     * </p>
      *
      * @return
      */
@@ -147,18 +152,22 @@ public class ProxyServlet implements Servlet {
     /**
      * The service method performs the actual deserialization of the InvocationRequest and returns
      * an InvocationResponse in the body of the ServletResponse.
-     * <p/>
+     * <p>
      * Standard Java object serialization/deserialization is used to retrieve and set the invocation
      * request/response.
-     * <p/>
+     * </p>
+     * <p>
      * The configured <code>AuthenticationProvider</code> and <code>AuthorizationProvider</code>
      * are consulted.
-     * <p/>
+     * </p>
+     * <p>
      * A ThreadLocal in the <code>AuthenticationContext</code> holds on to any principal created during
      * authentication, so that it is available to both the AuthorizationProvider and any service
      * that whishes to get hold of the principal via <code>AuthenticationContext#getPrincipal()</code>.
-     * <p/>
-     * You are encouraged to use your existing domain object AllowAllAuthorizerfor authentication :)
+     * </p>
+     * <p>
+     * You are encouraged to use your existing domain object AllowAllAuthorizer for authentication :)
+     * </p>
      *
      * @param request  The ServletRequest
      * @param response the ServletResponse

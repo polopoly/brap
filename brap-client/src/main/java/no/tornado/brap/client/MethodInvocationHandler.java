@@ -32,9 +32,10 @@ import no.tornado.brap.exception.RemotingException;
  * The MethodInvocationHandler is used by the <code>ServiceProxyFactory</code> to provide an implementation
  * of the supplied interface. It intercepts all method-calls and sends them
  * to the server and returns the invocation result.
- * <p></p>
+ * <p>
  * The recommended way to retrieve a service proxy is to call one of the static methods
  * in the <code>ServiceProxyFactory</code>.
+ * </p>
  */
 public class MethodInvocationHandler implements InvocationHandler, Serializable {
 
@@ -64,9 +65,8 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
 
     /**
      * Creates the service proxy on the given URI with the given credentials.
-     * <p></p>
-     * Credentials can be changed using the ServiceProxyFactory#setCredentials method.
-     * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
+     * <p>Credentials can be changed using the ServiceProxyFactory#setCredentials method.</p>
+     * <p>ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.</p>
      *
      * @param client The HttpClient that this BRAP client will use
      * @param serviceURI  The URI to the remote service
@@ -82,8 +82,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
 
     /**
      * Creates the service proxy on the given URI.
-     * <p></p>
-     * ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.
+     * <p>ServiceURI can be changed using the ServiceProxyFactory#setServiceURI method.</p>
      *
      * @param client The HttpClient that this BRAP client will use
      * @param serviceURI The URI to the remote service

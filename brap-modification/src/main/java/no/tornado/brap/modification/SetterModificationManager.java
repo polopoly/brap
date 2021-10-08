@@ -11,11 +11,9 @@ import no.tornado.brap.common.ModificationList;
 /**
  * This modificationmanager tracks changes to objects by proxying each invocation argument object
  * and tracking changes to the setters invoked while the service is executing.
- * <p/>
- * To configure what objects should be proxied, you define a list of Strings containing
- * either fully qualified classnames or package.* expressions.
- * <p/>
- * The depth of the object graph is set by the depth field.
+ * <p>To configure what objects should be proxied, you define a list of Strings containing
+ * either fully qualified classnames or package.* expressions.</p>
+ * <p>The depth of the object graph is set by the depth field.</p>
  */
 public class SetterModificationManager implements ModificationManager {
     private static final Integer INITIAL_DEPTH = 1;
