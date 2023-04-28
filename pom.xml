@@ -4,7 +4,7 @@
   <groupId>no.tornado.brap</groupId>
   <artifactId>brap-polopoly</artifactId>
   <packaging>pom</packaging>
-  <version>1.5</version>
+  <version>1.6-SNAPSHOT</version>
   <url>https://github.com/polopoly/brap</url>
   <name>BRAP</name>
   <modules>
@@ -48,7 +48,7 @@
     <connection>scm:git:git://github.com/polopoly/brap.git</connection>
     <developerConnection>scm:git:git@github.com:polopoly/brap.git</developerConnection>
     <url>http://github.com/polopoly/brap</url>
-    <tag>brap-polopoly-1.5</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
