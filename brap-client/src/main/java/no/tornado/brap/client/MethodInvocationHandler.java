@@ -12,10 +12,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -149,7 +151,46 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                 post.setEntity(entity);
 
                 try {
-                    HttpResponse httpresponse = httpClient.execute(post);
+                    final HttpResponse httpresponse = httpClient.execute(post);
+
+                    // if the request failed we will throw an IOException explaining why the request
+                    // failed, previously you simply got a strange "java.io.StreamCorruptedException: invalid stream header"
+                    // error.
+
+                    final int statusCode = httpresponse.getStatusLine().getStatusCode();
+                    if (statusCode != 200) {
+                        switch (statusCode) {
+                            case 301:
+                            case 302: {
+                                final Header location = httpresponse.getFirstHeader("Location");
+                                if (location != null) {
+                                    final String newUri = location.getValue();
+                                    throw new IOException(String.format(
+                                        "%s has been moved to %s (http status %d)",
+                                        getServiceURI(),
+                                        newUri,
+                                        statusCode
+                                    ));
+                                }
+                            }
+                            default: {
+                                if (LOG.isLoggable(Level.FINE)) {
+                                    final String serverOutput = EntityUtils.toString(httpresponse.getEntity(), StandardCharsets.UTF_8);
+                                    LOG.severe(String.format(
+                                        "%s failed with status %d, server response is:\n%s",
+                                        getServiceURI(),
+                                        statusCode,
+                                        serverOutput
+                                    ));
+                                }
+                                throw new IOException(String.format(
+                                    "%s failed with status %d",
+                                    getServiceURI(),
+                                    statusCode
+                                ));
+                            }
+                        }
+                    }
 
                     if (!method.getReturnType().equals(Object.class)
                             && method.getReturnType().isAssignableFrom(InputStream.class)) {
