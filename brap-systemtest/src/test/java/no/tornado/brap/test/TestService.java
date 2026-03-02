@@ -1,5 +1,6 @@
 package no.tornado.brap.test;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public interface TestService {
@@ -36,7 +37,13 @@ public interface TestService {
      * @return an inputstream containing the string "getStream calling" 
      */
     public InputStream getStream();
-    
+
+    /**
+     *
+     * @return an inputstream containing the string "getStream calling"
+     */
+    public InputStream getThrowingStream() throws IOException;
+
     /**
      * Throws RTE if is is not a stream containing "hej"
      * @param is

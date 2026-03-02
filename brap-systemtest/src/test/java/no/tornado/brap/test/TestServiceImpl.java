@@ -30,6 +30,11 @@ public class TestServiceImpl implements TestService {
         return is;
     }
 
+    @Override
+    public InputStream getThrowingStream() throws IOException {
+        throw new IOException("exception from getThrowingStream");
+    }
+
     public void setStream(InputStream is) {
         try {
             if (!"hej".equals(getInputStream(is)))

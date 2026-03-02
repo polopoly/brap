@@ -111,6 +111,7 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                     method.getReturnType().getName()
             ));
         }
+        boolean handleIOException = true;
         InvocationResponse response;
         try {
             InvocationRequest request = new InvocationRequest(method, args, getCredentials());
@@ -173,6 +174,33 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                                     ));
                                 }
                             }
+                            case 255: {
+                                // special case, the method invocation threw an exception on the server, and the
+                                // exception is serialized in the response body but the method returns an InputStream
+                                // since we do not want to read all the inputStream responses we signal an exception with
+                                // the 255 status code, in such case we will read the response which will contain a
+                                // serialized InvocationResponse with the exception set and re-throw the exception to the caller.
+                                response = readStream(httpresponse, args);
+                                if (response.getException() != null) {
+                                    final Throwable e = response.getException();
+                                    for (Class<?> exType : method.getExceptionTypes()) {
+                                        if (exType.isAssignableFrom(e.getClass())) {
+                                            if (e instanceof IOException) {
+                                                handleIOException = false;
+                                            }
+                                            throw e;
+                                        }
+                                    }
+
+                                    throw appendLocalStack(e);
+                                } else {
+                                    throw new IOException(String.format(
+                                        "%s failed with status %d, but no exception was found in the response",
+                                        getServiceURI(),
+                                        statusCode
+                                    ));
+                                }
+                            }
                             default: {
                                 if (LOG.isLoggable(Level.FINE)) {
                                     final String serverOutput = EntityUtils.toString(httpresponse.getEntity(), StandardCharsets.UTF_8);
@@ -196,25 +224,18 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                             && method.getReturnType().isAssignableFrom(InputStream.class)) {
                         return httpresponse.getEntity().getContent();
                     }
-                    try (InputStream contentInputStream = httpresponse.getEntity().getContent()) {
-                        try {
-                            try (ObjectInputStream in = new ObjectInputStream(contentInputStream)) {
-                                response = (InvocationResponse) in.readObject();
-                                applyModifications(args, response.getModifications());
-                            }
-                        } finally {
-                            closeStream(contentInputStream);
-                        }
-                    } finally {
-                        EntityUtils.consumeQuietly(httpresponse.getEntity());
-                    }
+                    response = readStream(httpresponse, args);
                 } finally {
                     EntityUtils.consumeQuietly(entity);
                     closeStream(streamToSend);
                 }
             }
         } catch (IOException e) {
-            throw new RemotingException(e);
+            if (handleIOException) {
+                throw new RemotingException(e);
+            } else {
+                throw appendLocalStack(e);
+            }
         }
 
         if (response.getException() != null) {
@@ -222,6 +243,25 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
         }
 
         return response.getResult();
+    }
+
+    protected InvocationResponse readStream(final HttpResponse httpresponse,
+                                            final Object[] args) throws IOException,
+                                                                        ClassNotFoundException {
+        InvocationResponse response;
+        try (InputStream contentInputStream = httpresponse.getEntity().getContent()) {
+            try {
+                try (ObjectInputStream in = new ObjectInputStream(contentInputStream)) {
+                    response = (InvocationResponse) in.readObject();
+                    applyModifications(args, response.getModifications());
+                }
+            } finally {
+                closeStream(contentInputStream);
+            }
+        } finally {
+            EntityUtils.consumeQuietly(httpresponse.getEntity());
+        }
+        return response;
     }
 
     protected void closeStream(final InputStream s) {

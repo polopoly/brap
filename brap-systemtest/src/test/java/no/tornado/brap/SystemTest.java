@@ -70,6 +70,13 @@ public class SystemTest {
     }
 
     @Test
+    public void runOnceThrowing() throws Exception {
+        HttpClient client = new DefaultHttpClient();
+        TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
+        testThrowingInputStream(service);
+    }
+
+    @Test
     public void runManyTimes() throws Exception {
         HttpClient client = new DefaultHttpClient();
         TestService service = ServiceProxyFactory.createProxy(TestService.class, client, "http://localhost:15291/TestService");
@@ -145,9 +152,23 @@ public class SystemTest {
                 fail("expected exception");
             } catch (Exception e) {
                 // expected
+                assertEquals("exception!", e.getMessage());
             }
+            testThrowingInputStream(service);
         } catch (IOException e) {
             fail(e.getMessage());
+        }
+    }
+
+    private void testThrowingInputStream(final TestService service) {
+        try {
+            try (InputStream is = service.getThrowingStream()) {
+                String result = readInputStream(is);
+                assertEquals("getStream calling", result);
+            }
+            fail("expected exception");
+        } catch (IOException e) {
+            assertEquals("exception from getThrowingStream", e.getMessage());
         }
     }
 

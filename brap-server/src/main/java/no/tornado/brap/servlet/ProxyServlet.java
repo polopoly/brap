@@ -8,12 +8,16 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import no.tornado.brap.auth.AuthenticationContext;
 import no.tornado.brap.auth.AuthenticationNotRequiredAuthenticator;
@@ -62,6 +66,9 @@ import no.tornado.brap.modification.ModificationManager;
  * </pre>
  */
 public class ProxyServlet implements Servlet {
+
+    private static final Logger LOG = Logger.getLogger(ProxyServlet.class.getName());
+
     private static final Integer DEFAULT_STREAM_BUFFER_SIZE = 16384;
 
     public final String INIT_PARAM_AUTHENTICATION_PROVIDER = "authenticationProvider";
@@ -207,11 +214,14 @@ public class ProxyServlet implements Servlet {
             invocationResponse.setModifications(serviceWrapper.getModificationManager().getModifications());
 
         } catch (Exception e) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.SEVERE, "Request " + ((HttpServletRequest) request).getRequestURI() + "got error " + e.getMessage(), e);
+            }
             if (e instanceof InvocationTargetException) {
                 InvocationTargetException ite = (InvocationTargetException) e;
                 invocationResponse.setException(ite.getTargetException());
             } else {
-                if (method != null && method.getExceptionTypes() != null) {
+                if (method != null) {
                     for (Class<?> exType : method.getExceptionTypes()) {
                         if (exType.isAssignableFrom(e.getClass()))
                             invocationResponse.setException(e);
@@ -229,6 +239,30 @@ public class ProxyServlet implements Servlet {
             } else {
                 try {
                     if (invocationRequest != null) {
+                        if (result == null && method != null && invocationResponse != null) {
+                            final Class<?> returnType = method.getReturnType();
+                            if (InputStream.class.isAssignableFrom(returnType)) {
+                                // the method return type is an InputStream, but the result is null.
+                                // This can only mean that an exception was thrown and caught in the method invocation,
+                                // and the exception is set in the invocationResponse. We log this as a warning,
+                                // and set the status to 255 to indicate to the client that an exception was thrown.
+                                if (invocationResponse.getException() != null) {
+                                    if (LOG.isLoggable(Level.FINE)) {
+                                        LOG.warning(String.format(
+                                            "Response from %s (method %s) contains exception %s with message: %s",
+                                            ((HttpServletRequest) request).getRequestURI(),
+                                            method.getName(),
+                                            invocationResponse.getException().getClass(),
+                                            invocationResponse.getException().getMessage()
+                                        ));
+                                    }
+                                    // since the method return type is an InputStream, the client will expect an InputStream in the response body.
+                                    // Since we have an exception to send back, we set the status to 255 and write the InvocationResponse with the exception to the body.
+                                    // The client should check for status 255 and handle the InvocationResponse with exception accordingly.
+                                    ((HttpServletResponse) response).setStatus(255);
+                                }
+                            }
+                        }
                         try (ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream())) {
                             out.writeObject(invocationResponse);
                         }
