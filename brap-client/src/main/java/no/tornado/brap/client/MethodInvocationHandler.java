@@ -151,10 +151,8 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
                 entity.setChunked(true);
                 post.setEntity(entity);
 
-                HttpResponse httpresponse = null;
-                boolean returningStream = false;
                 try {
-                    httpresponse = httpClient.execute(post);
+                    final HttpResponse httpresponse = httpClient.execute(post);
 
                     // if the request failed we will throw an IOException explaining why the request
                     // failed, previously you simply got a strange "java.io.StreamCorruptedException: invalid stream header"
@@ -224,14 +222,10 @@ public class MethodInvocationHandler implements InvocationHandler, Serializable 
 
                     if (!method.getReturnType().equals(Object.class)
                             && method.getReturnType().isAssignableFrom(InputStream.class)) {
-                        returningStream = true;
                         return httpresponse.getEntity().getContent();
                     }
                     response = readStream(httpresponse, args);
                 } finally {
-                    if (httpresponse != null && !returningStream) {
-                        EntityUtils.consumeQuietly(httpresponse.getEntity());
-                    }
                     EntityUtils.consumeQuietly(entity);
                     closeStream(streamToSend);
                 }
